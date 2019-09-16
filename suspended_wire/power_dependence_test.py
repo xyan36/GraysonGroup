@@ -23,7 +23,7 @@ FILENAME = TESTNAME + '_' + str(datetime.now()).replace(':','-') + ".txt"
 output = open(FILENAME,'w')
 t0 = time.clock()
 ti = datetime.now()
-header = "Time V_input X1 Y1 X1_ref Y1_ref X3 Y3 Date_time\n"
+header = "Date_time Time V_input X1 Y1 X1_ref Y1_ref X3 Y3 X3_ref Y3_ref\n"
 output.write(header)
 
 ### lock in initialize ###
@@ -87,26 +87,26 @@ def measurement(sens,initWaitTime): #sens= allowed error in reading
         X2 = float(lockin2.query("OUTP?1"))
         Y2 = float(lockin2.query("OUTP?2"))
         time.sleep(5) #additional wait time
-    t = float(time.clock()-t0)
-    line = str(t) + " "  \
-            + str(X1) + " " + str(Y1) + " "  \
-            + str(X2) + " " + str(Y2) + " " + str(datetime.now())
-    print(line)
-    output.write(line + '\n')
+    line = str(X1) + " " + str(Y1) + " "  \
+            + str(X2) + " " + str(Y2) + " "
+    return line
 
 ### voltage swap ###
 def VoltageSweep(voltages,sens1, TC1, SENS1, sens3, TC3, SENS3, initWaitTime):
     for v in voltages:
         lockin1.write("SLVL %d" %v)
-        print(str(v) + ': ')
-        output.write(str(v) + " ")
+        line = str(v) + " "
         time.sleep(5) #waiting for voltage stable
         lockinInit_1w()
         lockin_set_pms(TC1,SENS1)
-        measurement(sens1,initWaitTime)
+        str(datetime.now())
+        line += measurement(sens1,initWaitTime)
         lockinInit_3w()
         lockin_set_pms(TC3,SENS3)
-        measurement(sens3,initWaitTime)
+        line += measurement(sens3,initWaitTime).rstrip()
+        t = float(time.clock()-t0)
+        output.write(str(datetime.now()) + str(t) + line)
+
 
 freq = 17 #Hz
 lockin1.write('FREQ %d' %freq)
