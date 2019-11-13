@@ -9,13 +9,15 @@ def voltageScan(timeSleep, voltage):
   time.sleep(timeSleep);
   dc.write("VOLT %f" %voltage)
 
-#init()
-#heating steps
-upVoltages = np.arange(0.2, 1.4, 0.2)
-for voltage in upVoltages:
-    voltageScan(120, voltage)
+steps = np.arange(0,11,1) #numbre of steps of a scan
+dt = 60 #time interval between each step
+c = 0.013 #define a constant
 
+init()
+#heating steps
+for step in steps:
+    voltageScan(timeSleep = dt, voltage = c * np.sqrt(step*dt))
+time.sleep(5*60);
 #cooling steps
-downVoltages = np.arange(1.2, -0.4, -0.2)
-for voltage in downVoltages:
-    voltageScan(120, voltage)
+for step in np.flip(steps,0):
+    voltageScan(timeSleep = dt, voltage = c * np.sqrt(step*dt))
