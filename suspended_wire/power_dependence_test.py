@@ -11,17 +11,17 @@ import visa
 import numpy as np
 
 ### basic parameters ###
-TESTNAME = "190411_3w_sw_gold_wire" #record the frequency
+TESTNAME = "190916_P_3_power_dep_f17_test1" #record the frequency
 rm = visa.ResourceManager();
 print(rm.list_resources())
 #fg = rm.open_resource("GPIB::9::INSTR")
-lockin1 = rm.open_resource("GPIB::10::INSTR") #sample & SINE_OUT source
-lockin2 = rm.open_resource("GPIB::8::INSTR") #reference resistor
+lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample & SINE_OUT source
+lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
 
 ### output file initialize ###
 FILENAME = TESTNAME + '_' + str(datetime.now()).replace(':','-') + ".txt"
 output = open(FILENAME,'w')
-t0 = time.clock()
+t0 = time.process_time()
 ti = datetime.now()
 header = "Date_time Time V_input X1 Y1 X1_ref Y1_ref X3 Y3 X3_ref Y3_ref\n"
 output.write(header)
@@ -94,7 +94,7 @@ def measurement(sens,initWaitTime): #sens= allowed error in reading
 ### voltage swap ###
 def VoltageSweep(voltages,sens1, TC1, SENS1, sens3, TC3, SENS3, initWaitTime):
     for v in voltages:
-        lockin1.write("SLVL %d" %v)
+        lockin1.write("SLVL %f" %v)
         line = str(v) + " "
         time.sleep(5) #waiting for voltage stable
         lockinInit_1w()
@@ -104,20 +104,21 @@ def VoltageSweep(voltages,sens1, TC1, SENS1, sens3, TC3, SENS3, initWaitTime):
         lockinInit_3w()
         lockin_set_pms(TC3,SENS3)
         line += measurement(sens3,initWaitTime).rstrip()
-        t = float(time.clock()-t0)
-        output.write(str(datetime.now()) + str(t) + line)
+        t = float(time.process_time()-t0)
+        print(str(datetime.now()) + " " + str(t) + " " + line)
+        output.write(str(datetime.now()) + " " + str(t) + " " + line +"\n")
 
 
 freq = 17 #Hz
 lockin1.write('FREQ %d' %freq)
 voltages = np.array([0.004,0.1,0.15,0.2,0.25,0.3,0.35,0.4])
-sens1 = #allowed error
-timeCon1 = #time const for 1w measurement
-sensitivity1 = #sensitivity for 1w measurement
-sens3 = #allowed error
-timeCon3 = #time const for 3w measurement
-sensitivity3 = #sensitivity for 3w measurement
-initWaitTime = 60 #s
+sens1 = 1e-3#allowed error
+timeCon1 = 9#time const for 1w measurement
+sensitivity1 = 22#sensitivity for 1w measurement
+sens3 = 1e-6#allowed error
+timeCon3 = 9#time const for 3w measurement
+sensitivity3 = 13#sensitivity for 3w measurement
+initWaitTime = 6 #s
 VoltageSweep(voltages, sens1, timeCon1, sensitivity1, sens3, timeCon3, sensitivity3, initWaitTime)
 
 output.close()# may record unfinished data
