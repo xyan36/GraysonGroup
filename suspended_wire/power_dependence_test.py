@@ -11,7 +11,7 @@ import visa
 import numpy as np
 
 ### basic parameters ###
-TESTNAME = "190916_P_3_power_dep_f17_test1" #record the frequency
+TESTNAME = "200203//200203_P_4_power_dep_f3p4_test3" #record the frequency
 rm = visa.ResourceManager();
 print(rm.list_resources())
 #fg = rm.open_resource("GPIB::9::INSTR")
@@ -20,11 +20,12 @@ lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
 
 ### output file initialize ###
 FILENAME = TESTNAME + '_' + str(datetime.now()).replace(':','-') + ".txt"
-output = open(FILENAME,'w')
-t0 = time.process_time()
+
+t0 = time.time()
 ti = datetime.now()
 header = "Date_time Time V_input X1 Y1 X1_ref Y1_ref X3 Y3 X3_ref Y3_ref\n"
-output.write(header)
+with open(FILENAME,'a') as output:
+    output.write(header)
 
 ### lock in initialize ###
 def lockinInit_1w():
@@ -74,25 +75,25 @@ def lockin_set_pms(timeCon,sensitivity):
 
 ### measurements ###
 def measurement(sens,initWaitTime): #sens= allowed error in reading
-    X1 = float(lockin1.query("OUTP?1"))
-    Y1 = float(lockin1.query("OUTP?2"))
-    X2 = float(lockin2.query("OUTP?1"))
-    Y2 = float(lockin2.query("OUTP?2"))
+    X = float(lockin1.query("OUTP?1"))
+    Y = float(lockin1.query("OUTP?2"))
+    X_ref = float(lockin2.query("OUTP?1"))
+    Y_ref = float(lockin2.query("OUTP?2"))
     time.sleep(initWaitTime) #initial wait time
 #    #check reading to be stable
-    while (np.abs(X1 - float(lockin1.query('OUTP?1')))> sens
-        or np.abs(X2 - float(lockin2.query('OUTP?1')))> sens):
-        X1 = float(lockin1.query("OUTP?1"))
-        Y1 = float(lockin1.query("OUTP?2"))
-        X2 = float(lockin2.query("OUTP?1"))
-        Y2 = float(lockin2.query("OUTP?2"))
+    while (np.abs(X - float(lockin1.query('OUTP?1')))> sens
+        or np.abs(X_ref - float(lockin2.query('OUTP?1')))> sens):
+        X = float(lockin1.query("OUTP?1"))
+        Y = float(lockin1.query("OUTP?2"))
+        X_ref = float(lockin2.query("OUTP?1"))
+        Y_ref = float(lockin2.query("OUTP?2"))
         time.sleep(5) #additional wait time
-    line = str(X1) + " " + str(Y1) + " "  \
-            + str(X2) + " " + str(Y2) + " "
+    line = str(X) + " " + str(Y) + " "  \
+            + str(X_ref) + " " + str(Y_ref) + " "
     return line
 
 ### voltage swap ###
-def VoltageSweep(voltages,sens1, TC1, SENS1, sens3, TC3, SENS3, initWaitTime):
+def VoltageSweep(voltages,sens1, TC1, SENS1, initWaitTime1, sens3, TC3, SENS3, initWaitTime3):
     for v in voltages:
         lockin1.write("SLVL %f" %v)
         line = str(v) + " "
@@ -100,26 +101,29 @@ def VoltageSweep(voltages,sens1, TC1, SENS1, sens3, TC3, SENS3, initWaitTime):
         lockinInit_1w()
         lockin_set_pms(TC1,SENS1)
         str(datetime.now())
-        line += measurement(sens1,initWaitTime)
+        line += measurement(sens1,initWaitTime1)
         lockinInit_3w()
         lockin_set_pms(TC3,SENS3)
-        line += measurement(sens3,initWaitTime).rstrip()
-        t = float(time.process_time()-t0)
+        line += measurement(sens3,initWaitTime3).rstrip()
+        t = float(time.time()-t0)
         print(str(datetime.now()) + " " + str(t) + " " + line)
-        output.write(str(datetime.now()) + " " + str(t) + " " + line +"\n")
+        with open(FILENAME,'a') as output:
+            output.write(str(datetime.now()) + " " + str(t) + " " + line +"\n")
 
 
-freq = 17 #Hz
-lockin1.write('FREQ %d' %freq)
-voltages = np.array([0.004,0.1,0.15,0.2,0.25,0.3,0.35,0.4])
+freq = 3.4 #Hz
+lockin1.write('FREQ %f' %freq)
+voltages = np.array([0.004,0.068, 0.338, 0.668, 0.996, 1.316, 1.632, 1.962, 2.554])
 sens1 = 1e-3#allowed error
-timeCon1 = 9#time const for 1w measurement
-sensitivity1 = 22#sensitivity for 1w measurement
+timeCon1 = 10#time const for 1w measurement
+sensitivity1 = 23#sensitivity for 1w measurement
+initWaitTime1 = 60 #s
+
 sens3 = 1e-6#allowed error
-timeCon3 = 9#time const for 3w measurement
-sensitivity3 = 13#sensitivity for 3w measurement
-initWaitTime = 6 #s
-VoltageSweep(voltages, sens1, timeCon1, sensitivity1, sens3, timeCon3, sensitivity3, initWaitTime)
+timeCon3 = 11#time const for 3w measurement
+sensitivity3 = 15#sensitivity for 3w measurement
+initWaitTime3 = 180 #s
+VoltageSweep(voltages, sens1, timeCon1, sensitivity1, initWaitTime1, sens3, timeCon3, sensitivity3, initWaitTime3)
 
 output.close()# may record unfinished data
 tf = datetime.now()
