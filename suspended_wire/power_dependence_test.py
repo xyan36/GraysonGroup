@@ -9,9 +9,11 @@ from datetime import datetime
 import time
 import visa
 import numpy as np
+import os
 
 ### basic parameters ###
-TESTNAME = "200203//200203_P_4_power_dep_f3p4_test3" #record the frequency
+os.mkdir('200204')
+TESTNAME = "200204//200204_P_4_power_dep_f3p4_test4" #record the frequency
 rm = visa.ResourceManager();
 print(rm.list_resources())
 #fg = rm.open_resource("GPIB::9::INSTR")
@@ -24,7 +26,7 @@ FILENAME = TESTNAME + '_' + str(datetime.now()).replace(':','-') + ".txt"
 t0 = time.time()
 ti = datetime.now()
 header = "Date_time Time V_input X1 Y1 X1_ref Y1_ref X3 Y3 X3_ref Y3_ref\n"
-with open(FILENAME,'a') as output:
+with open(FILENAME,'w') as output:
     output.write(header)
 
 ### lock in initialize ###
@@ -113,7 +115,7 @@ def VoltageSweep(voltages,sens1, TC1, SENS1, initWaitTime1, sens3, TC3, SENS3, i
 
 freq = 3.4 #Hz
 lockin1.write('FREQ %f' %freq)
-voltages = np.array([0.004,0.068, 0.338, 0.668, 0.996, 1.316, 1.632, 1.962, 2.554])
+voltages = np.array([2.2, 2.3, 2.4, 2.6, 2.7])
 sens1 = 1e-3#allowed error
 timeCon1 = 10#time const for 1w measurement
 sensitivity1 = 23#sensitivity for 1w measurement
@@ -122,9 +124,11 @@ initWaitTime1 = 60 #s
 sens3 = 1e-6#allowed error
 timeCon3 = 11#time const for 3w measurement
 sensitivity3 = 15#sensitivity for 3w measurement
-initWaitTime3 = 180 #s
+initWaitTime3 = 300 #s
 VoltageSweep(voltages, sens1, timeCon1, sensitivity1, initWaitTime1, sens3, timeCon3, sensitivity3, initWaitTime3)
 
+lockin1.write("SLVL %f" %0.004)
+lockinInit_1w()
 output.close()# may record unfinished data
 tf = datetime.now()
 print ("Program done! total time is: "+ str(tf-ti))
