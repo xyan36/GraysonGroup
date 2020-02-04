@@ -24,7 +24,7 @@ interval = 1000
 #          'results/GaGdN-300K-190809_002.dat']
 #fname = '200203//200203_P_4_power_dep_f3p4_test2_2020-02-03 15-15-13.142605.txt'
 #fname = '200203//200203_P_4_power_dep_f3p4_test1_2020-02-03 14-48-22.718494.txt'
-fname = '200204//200204_P_4_power_dep_f3p4_test4_2020-02-04 10-48-00.912411.txt'
+fname = '200204//200204_P_4_power_dep_f3p4_test5_2020-02-04 12-28-12.022227.txt'
 #x_column = 'B_digital'
 #y_column = 'V_real_12'
 #x_columns = ['B_digital', 'B_digital']#, 'B_digital']

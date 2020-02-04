@@ -12,8 +12,8 @@ import numpy as np
 import os
 
 ### basic parameters ###
-os.mkdir('200204')
-TESTNAME = "200204//200204_P_4_power_dep_f3p4_test4" #record the frequency
+#os.mkdir('200204')
+TESTNAME = "200204//200204_P_4_power_dep_f3p4_test5" #record the frequency
 rm = visa.ResourceManager();
 print(rm.list_resources())
 #fg = rm.open_resource("GPIB::9::INSTR")
@@ -115,10 +115,10 @@ def VoltageSweep(voltages,sens1, TC1, SENS1, initWaitTime1, sens3, TC3, SENS3, i
 
 freq = 3.4 #Hz
 lockin1.write('FREQ %f' %freq)
-voltages = np.array([2.2, 2.3, 2.4, 2.6, 2.7])
+voltages = np.array([2.2, 2.3, 2.4, 2.554, 2.6, 2.7])
 sens1 = 1e-3#allowed error
 timeCon1 = 10#time const for 1w measurement
-sensitivity1 = 23#sensitivity for 1w measurement
+sensitivity1 = 24#sensitivity for 1w measurement
 initWaitTime1 = 60 #s
 
 sens3 = 1e-6#allowed error
