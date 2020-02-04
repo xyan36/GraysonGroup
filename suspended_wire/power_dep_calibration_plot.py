@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
-graph_data = pd.read_csv('200203//200203_P_4_power_dep_f3p4_test3_2020-02-03 16-02-24.732562.txt', sep = ' ')
+graph_data = pd.read_csv('200204//200203_04_combined_P_4_power_dep.txt', sep = ' ')
 fig, axs = plt.subplots(3,1, figsize = (8,10))
 axs[0].scatter(graph_data.Time, graph_data.X1, label = 'X1')
 axs[0].scatter(graph_data.Time, graph_data.Y1, label = 'Y1')
@@ -49,4 +49,4 @@ for i, txt in enumerate(graph_data['I1w']):
     xytext = (X[i]+ -1e-6,Y[i] + 0.00002))
 
 plt.tight_layout()
-plt.savefig('200203//200203_p4_power_dep_f3p4_test3_plot',dpi = 300)
+#plt.savefig('200203//200203_p4_power_dep_f3p4_test3_plot',dpi = 300)
