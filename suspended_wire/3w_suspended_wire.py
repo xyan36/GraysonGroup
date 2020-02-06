@@ -19,10 +19,10 @@ import numpy as np
 import os
 ### basic parameters ###
 try:
-    os.mkdir('200205')
+    os.mkdir('200206')
 except FileExistsError:
     pass    
-TESTNAME = "200205//200205_P_4_3w_test1"
+TESTNAME = "200206//200206_P_4_3w_test2_0p01_1"
 rm = visa.ResourceManager();
 print(rm.list_resources())
 #fg = rm.open_resource("GPIB::11::INSTR")
@@ -135,14 +135,14 @@ def freqSweep(start,sens,initWaitTime):
         lockin1.write('FREQ %f' %i)
         if (start < 1):
             error = 0.01
-            time.sleep(20) #waiting for freq sync
+            sleep = 20#waiting for freq sync
         else:
             error = 1
-            time.sleep(5)
+            sleep = 5
         freq1 = float(lockin1.query('freq?'))
         freq2 = float(lockin2.query('freq?'))
         while (np.abs(i - freq1) > error or np.abs(i - freq2) > error):
-            time.sleep(0.5)
+            time.sleep(sleep)
             freq1 = float(lockin1.query('freq?'))
             freq2 = float(lockin2.query('freq?'))
         #print(i,freq1,freq2)
@@ -152,14 +152,14 @@ def freqSweepSingle(start, sens,initWaitTime):
         lockin1.write('FREQ %f' %start)
         if (start < 1):
             error = 0.01
-            time.sleep(20) #waiting for freq sync
+            sleep = 55#waiting for freq sync
         else:
             error = 1
-            time.sleep(5)
+            sleep = 5#waiting for freq sync
         freq1 = float(lockin1.query('freq?'))
         freq2 = float(lockin2.query('freq?'))
         while (np.abs(start - freq1) > error or np.abs(start - freq2) > error):
-            time.sleep(2)
+            time.sleep(sleep)
             freq1 = float(lockin1.query('freq?'))
             freq2 = float(lockin2.query('freq?'))
         #print(i,freq1,freq2)
@@ -207,6 +207,22 @@ lockinInit_3w()
 
 lockin1.write("SLVL 1.8")
 
+##freq sweep 0.001-0.01Hz
+#timeCon = 17#
+#sensitivity = 17# 18 FOR 2V; 14#100 UV;
+#lockin_set_pms(timeCon,sensitivity)
+#sens = 1e-7
+#waitTime = 10*60#s
+#freqSweep(0.1,sens,waitTime)
+
+#freq sweep 0.01-0.1Hz
+timeCon = 15#
+sensitivity = 17# 18 FOR 2V; 14#100 UV;
+lockin_set_pms(timeCon,sensitivity)
+sens = 1e-7
+waitTime = 30*60#s
+freqSweep(0.1,sens,waitTime)
+
 #freq sweep 0.1-1Hz
 timeCon = 13#
 sensitivity = 17# 18 FOR 2V; 14#100 UV;
@@ -215,51 +231,51 @@ sens = 1e-7
 waitTime = 10*60#s
 freqSweep(0.1,sens,waitTime)
 
-#freq sweep 1-10Hz
-timeCon =  13#
-sensitivity = 16#2mV
-lockin_set_pms(timeCon,sensitivity)
-sens = 1e-7#0.1e-3V
-waitTime = 5*60#s
-freqSweep(1,sens,waitTime)
-
-#freq sweep 10-100Hz
-timeCon = 12#
-sensitivity = 16#500uV
-lockin_set_pms(timeCon,sensitivity)
-sens = 1e-7#0.01e-3#V
-waitTime = 5*60#s
-freqSweep(10,sens,waitTime)
-
-#freq sweep 100-1000Hz
-timeCon = 11#
-sensitivity = 16# 500 uV
-lockin_set_pms(timeCon, sensitivity)
-#lockinsingle_set_pms(lockin2, timeCon, 25)
-sens = 1e-7#0.001e-3#V
-waitTime = 5*60#s
-freqSweep(100,sens,waitTime)
-
-#freq sweep 1000-10000Hz
-timeCon = 7#0.3s
-sensitivity = 16#0.2mV
-lockin_set_pms(timeCon,sensitivity)
-sens = 1e-7#V
-waitTime = 3*60#s
-freqSweep(1000,sens,waitTime)
-
-#freq sweep for f>10KHz
-timeCon = 7#0.3s
-sensitivity = 16#0.2mV
-lockin_set_pms(timeCon,sensitivity)
-sens = 1e-7#V
-waitTime = 3*60#s
-freqSweepSingle(10000, sens, waitTime)
-freqSweepSingle(15000, sens, waitTime)
-freqSweepSingle(20000, sens, waitTime)
-freqSweepSingle(25000, sens, waitTime)
-freqSweepSingle(30000, sens, waitTime)
-
+##freq sweep 1-10Hz
+#timeCon =  13#
+#sensitivity = 16#2mV
+#lockin_set_pms(timeCon,sensitivity)
+#sens = 1e-7#0.1e-3V
+#waitTime = 5*60#s
+#freqSweep(1,sens,waitTime)
+#
+##freq sweep 10-100Hz
+#timeCon = 12#
+#sensitivity = 16#500uV
+#lockin_set_pms(timeCon,sensitivity)
+#sens = 1e-7#0.01e-3#V
+#waitTime = 5*60#s
+#freqSweep(10,sens,waitTime)
+#
+##freq sweep 100-1000Hz
+#timeCon = 11#
+#sensitivity = 16# 500 uV
+#lockin_set_pms(timeCon, sensitivity)
+##lockinsingle_set_pms(lockin2, timeCon, 25)
+#sens = 1e-7#0.001e-3#V
+#waitTime = 5*60#s
+#freqSweep(100,sens,waitTime)
+#
+##freq sweep 1000-10000Hz
+#timeCon = 7#0.3s
+#sensitivity = 16#0.2mV
+#lockin_set_pms(timeCon,sensitivity)
+#sens = 1e-7#V
+#waitTime = 3*60#s
+#freqSweep(1000,sens,waitTime)
+#
+##freq sweep for f>10KHz
+#timeCon = 7#0.3s
+#sensitivity = 16#0.2mV
+#lockin_set_pms(timeCon,sensitivity)
+#sens = 1e-7#V
+#waitTime = 3*60#s
+#freqSweepSingle(10000, sens, waitTime)
+#freqSweepSingle(15000, sens, waitTime)
+#freqSweepSingle(20000, sens, waitTime)
+#freqSweepSingle(25000, sens, waitTime)
+#freqSweepSingle(30000, sens, waitTime)
+#
 lockin1.write('freq 17')
 lockin1.write("SLVL 0.004")
 lockinInit_1w()
