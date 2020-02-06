@@ -53,4 +53,4 @@ axs[2].legend(loc = 'upper left')
 #    xytext = (X[i]+ -1e-6,Y[i] + 0.00001))
 
 plt.tight_layout()
-plt.savefig('200203//200203_p4_power_dep_f3p4_test5_plot_X3_Y3',dpi = 300)
+#plt.savefig('200203//200203_p4_power_dep_f3p4_test5_plot_X3_Y3',dpi = 300)
