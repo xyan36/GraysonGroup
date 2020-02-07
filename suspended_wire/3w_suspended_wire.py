@@ -22,7 +22,7 @@ try:
     os.mkdir('200206')
 except FileExistsError:
     pass    
-TESTNAME = "200206//200206_P_4_3w_test2_0p01_1"
+TESTNAME = "200206//200206_P_4_3w_test2_0p01_0p1"
 rm = visa.ResourceManager();
 print(rm.list_resources())
 #fg = rm.open_resource("GPIB::11::INSTR")
@@ -221,15 +221,15 @@ sensitivity = 17# 18 FOR 2V; 14#100 UV;
 lockin_set_pms(timeCon,sensitivity)
 sens = 1e-7
 waitTime = 30*60#s
-freqSweep(0.1,sens,waitTime)
+freqSweep(0.01,sens,waitTime)
 
-#freq sweep 0.1-1Hz
-timeCon = 13#
-sensitivity = 17# 18 FOR 2V; 14#100 UV;
-lockin_set_pms(timeCon,sensitivity)
-sens = 1e-7
-waitTime = 10*60#s
-freqSweep(0.1,sens,waitTime)
+##freq sweep 0.1-1Hz
+#timeCon = 13#
+#sensitivity = 17# 18 FOR 2V; 14#100 UV;
+#lockin_set_pms(timeCon,sensitivity)
+#sens = 1e-7
+#waitTime = 10*60#s
+#freqSweep(0.1,sens,waitTime)
 
 ##freq sweep 1-10Hz
 #timeCon =  13#
