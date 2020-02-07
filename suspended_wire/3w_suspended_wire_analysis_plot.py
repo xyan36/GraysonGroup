@@ -14,7 +14,7 @@ from sklearn.linear_model import LinearRegression
 #          'results/GaGdN-300K-190809_002.dat']
 #fname = '200203//200203_P_4_power_dep_f3p4_test2_2020-02-03 15-15-13.142605.txt'
 #fname = '200203//200203_P_4_power_dep_f3p4_test1_2020-02-03 14-48-22.718494.txt'
-fname = '200205//200205_P_4_3w_test1_2020-02-05 11-58-14.423207.txt'
+fname = '200206//200206_P_4_3w_test12_combined.txt'
 
 graph_data = pd.read_csv(fname, sep = ' ', header = 0)
 
