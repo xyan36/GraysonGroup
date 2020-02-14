@@ -46,15 +46,15 @@ def V3w_imag(w1, k, c, correction_factor = 1):
 
 def V3w_fit_both(w1, k, c, correction_factor = 1):
     
-    fit_real = V3w_real(w1, k, c)
-    fit_imag = V3w_imag(w1, k, c)
+    fit_real = V3w_real(w1[:len(graph_data.X3)], k, c)
+    fit_imag = V3w_imag(w1[len(graph_data.Y3):], k, c)
     
     return np.append(fit_real, fit_imag)
     
 
 def writeCSV(dataframe, fname):
     if os.path.isfile(fname):
-        check = input('Trying to write: ' + dataframe.name + ' to ' + fname + '. File exist. Overwrite or append or cancel? o/a/c: ')
+        check = input('Trying to write: ' + str(dataframe.columns) + ' to ' + fname + '. File exist. Overwrite or append or cancel? o/a/c: ')
         if check == 'o':
             dataframe.to_csv(fname, index = True)
             return
@@ -72,27 +72,26 @@ w1 = np.arange(0.01,100,0.01) * 2* np.pi#use w = 2pi*f to fit
 #popt_X3, pcov_X3 = curve_fit(V3w_real, graph_data.Lockin1f * 2* np.pi, graph_data['X3'], p0 = [10,10])
 #popt_Y3, pcov_Y3 = curve_fit(V3w_imag, graph_data.Lockin1f * 2* np.pi, graph_data['Y3'], p0 = [10, 10])
 
-combo_Xdata = np.append(graph_data.Lockin1f, graph_data.Lockin1f)
+combo_Xdata = np.append(graph_data.Lockin1f * 2 * np.pi, graph_data.Lockin1f * 2 * np.pi)
 combo_Ydata = np.append(graph_data.X3, graph_data.Y3)
 popt, pcov = curve_fit(V3w_fit_both, combo_Xdata, combo_Ydata, p0 = [10, 10])
 
-#df2 = pd.DataFrame({'freq': w1/(2*np.pi), 'w1':w1, 'X1_fit': V3w_real(w1,*popt), 'X1_exp': V3w_real(w1, 314, 130),
-#                    'Y1_fit': V3w_imag(w1,*popt2), 'Y1_exp': V3w_imag(w1, 314, 130)})
-result = pd.DataFrame({'X3_fit': popt_X3, 'Y3_fit': popt_Y3}, 
+df2 = pd.DataFrame({'freq': w1/(2*np.pi), 'w1':w1, 'X1_fit': V3w_real(w1,*popt), 'X1_exp': V3w_real(w1, 314, 130),
+                    'Y1_fit': V3w_imag(w1,*popt), 'Y1_exp': V3w_imag(w1, 314, 130)})
+result = pd.DataFrame({'fit values': popt}, 
                       index = ['Thermal conductivity k', 'Heat capacity c'],
-                      name = 'result')
-
+                      )
 parameters = pd.DataFrame({'Temp coeff a': a, 'Re0': Re0, 'V1w_sp': V1w_sp,
                        'I1w': I1w, 'Suspended length 2l': 2*l, 
                        'Width': width, 'Thickness': thickness,
                        'S': S, 'Density': rou}, index = ['Parameter values:'],
-                        name = 'parameters')
+                        )
 parameters = parameters[['Temp coeff a', 'Re0', 'V1w_sp', 'I1w', 
                          'Suspended length 2l', 'Width', 'Thickness',
-                         'S', 'Density']]
+                         'S', 'Density']] #reorder columns
 fig, axs = plt.subplots(2,1,figsize = (8,10))
 axs[0].scatter(graph_data.Lockin1f, graph_data.X3, label = 'X3')
-axs[0].plot(w1 / 2 / np.pi, V3w_real(w1,*popt_X3), label = 'X3_fit')
+axs[0].plot(w1 / 2 / np.pi, V3w_real(w1,*popt), label = 'X3_fit')
 axs[0].set_xlabel('f(Hz)')
 axs[0].set_ylabel('Real_V3w(V)')
 axs[0].set_xscale('log')
@@ -101,7 +100,7 @@ axs[0].legend(loc = 'upper right')
 axs[0].set_ylim(graph_data.X3.min() - 0.0001, graph_data.X3.max() + 0.0002)
 
 axs[1].scatter(graph_data.Lockin1f, graph_data.Y3, label = 'Y3')
-axs[1].plot(w1 / 2 / np.pi, V3w_imag(w1, *popt_Y3), label = 'Y3_fit')
+axs[1].plot(w1 / 2 / np.pi, V3w_imag(w1, *popt), label = 'Y3_fit')
 axs[1].set_xlabel('f(Hz)')
 axs[1].set_ylabel('Imag_V3w(V)')
 axs[1].set_xscale('log')
@@ -111,8 +110,8 @@ axs[1].set_ylim(graph_data.Y3.min() - 0.0001, graph_data.Y3.max() + 0.0001)
 
 #plt.subplots_adjust(hspace = 0.2,wspace = 0.2)
 plt.tight_layout()
-plt.savefig('200206//200206_P_4_3w_fit_2',dpi = 300)
-output = '200206//200206_P_4_3w_fit_result_1.csv'
+plt.savefig('200206//200206_P_4_3w_fit_2_both',dpi = 300)
+output = '200206//200206_P_4_3w_fit_result_2.csv'
 writeCSV(parameters, output)
 writeCSV(result, output)
 

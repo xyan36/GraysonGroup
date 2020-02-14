@@ -1,3 +1,12 @@
-,X3_fit,Y3_fit
-thermal conductivity k,1.4704272041680782,1.3727471007905463
-heat capacity c,41.359086700431355,42.01042340596294
+1nd fit:,(all units are SI units),,,,,,,,
+,Temp coeff a,Re0,V1w_sp,I1w,Suspended length 2l,Width,Thickness,S,Density
+Parameter values:,0.005625,2.7,0.06771,0.025077778,0.004,0.002,1.70E-05,3.40E-08,7740
+,X3_fit,Y3_fit,,,,,,,
+Thermal conductivity k,4.805317552,4.486101637,,,,,,,
+Heat capacity c,135.1604287,137.2889659,,,,,,,
+2nd fit: ,,,,,,,,,
+,Temp coeff a,Re0,V1w_sp,I1w,Suspended length 2l,Width,Thickness,S,Density
+Parameter values:,0.005,2.7,0.06771,0.025077778,0.004,0.002,1.70E-05,3.40E-08,7740
+,X3_fit,Y3_fit,,,,,,,
+Thermal conductivity k,4.271393421,3.9876459,,,,,,,
+Heat capacity c,120.1425976,122.0346359,,,,,,,
