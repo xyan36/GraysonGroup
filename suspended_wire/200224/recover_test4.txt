@@ -1,0 +1,1 @@
+runfile('C:/Users/B145 Experiment2/Desktop/Xueting/measurement_codes/suspended_wire/temp_coeff_test_lockin.py', wdir='C:/Users/B145 Experiment2/Desktop/Xueting/measurement_codes/suspended_wire')
