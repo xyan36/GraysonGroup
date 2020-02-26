@@ -76,8 +76,6 @@ combo_Xdata = np.append(graph_data.Lockin1f * 2 * np.pi, graph_data.Lockin1f * 2
 combo_Ydata = np.append(graph_data.X3, graph_data.Y3)
 popt, pcov = curve_fit(V3w_fit_both, combo_Xdata, combo_Ydata, p0 = [10, 10])
 
-df2 = pd.DataFrame({'freq': w1/(2*np.pi), 'w1':w1, 'X1_fit': V3w_real(w1,*popt), 'X1_exp': V3w_real(w1, 314, 130),
-                    'Y1_fit': V3w_imag(w1,*popt), 'Y1_exp': V3w_imag(w1, 314, 130)})
 result = pd.DataFrame({'fit values': popt}, 
                       index = ['Thermal conductivity k', 'Heat capacity c'],
                       )
