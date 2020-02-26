@@ -22,7 +22,7 @@ interval = 1000
 
 #fnames = ['results/GaGdN-300K-190809_001.dat',
 #          'results/GaGdN-300K-190809_002.dat']
-fname = '191001_Sintered_P_1_seebeck.txt'
+fname = '200226//200226_glass_R78_temp_coeff_DMM_1.txt'
 #Rref = 12.64
 
 #x_column = 'B_digital'
@@ -45,28 +45,28 @@ fname = '191001_Sintered_P_1_seebeck.txt'
 def animate_multi(i, axs, fname, color=None):
     for ax in axs:
         ax.clear()
-    graph_data = pd.read_csv(fname, sep = ' ', header = 0)
+    graph_data = pd.read_csv(fname, sep = ',', header = 0, names = ['Date_time', 'RTD', 'Rsamp'], index_col = False)
     
-    graph_data['TimeDur'] = (pd.to_timedelta(graph_data.Time)-pd.to_timedelta(graph_data.Time[0]))/1E9;
+#    graph_data['TimeDur'] = (pd.to_timedelta(graph_data.Date_Time)-pd.to_timedelta(graph_data.Date_Time[0]))/1E9;
 
-    graph_data['Tl'] = 9.91684E-6*graph_data['RTDl']**2+0.23605*graph_data['RTDl']-245.96823
-    graph_data['Tr'] = 9.91684E-6*graph_data['RTDr']**2+0.23605*graph_data['RTDr']-245.96823
-    graph_data['T_average'] = (graph_data.Tl+graph_data.Tr)/2
+    graph_data['T'] = 9.91684E-6*graph_data['RTD']**2+0.23605*graph_data['RTD']-245.96823
+#    graph_data['Tr'] = 9.91684E-6*graph_data['RTDr']**2+0.23605*graph_data['RTDr']-245.96823
+#    graph_data['T_average'] = (graph_data.Tl+graph_data.Tr)/2
   
-    axs[0].plot(graph_data.TimeDur, graph_data.Tl, label = 'Tl')
-    axs[0].plot(graph_data.TimeDur, graph_data.Tr, label = 'Tr')
-    axs[0].set_xlabel('times(s)')
-    axs[0].set_ylabel('T(C)')
-    axs[0].legend(loc = 'upper right')
-    
-    axs[1].plot(graph_data.TimeDur, graph_data.Vsamp, label = 'Vsamp')
-    axs[1].set_xlabel('times(s)')
-    axs[1].set_ylabel('V(V)')
-    #axs[1].legend(loc = 'upper left')
-    
-    axs[2].plot(graph_data.T_average, graph_data.Vsamp, label = 'Vsamp')
-    axs[2].set_xlabel('Tavg(K)')
-    axs[2].set_ylabel('V(V)')
+#    axs[0].plot(graph_data.TimeDur, graph_data.T, label = 'T')
+##    axs[0].plot(graph_data.TimeDur, graph_data.Tr, label = 'Tr')
+#    axs[0].set_xlabel('times(s)')
+#    axs[0].set_ylabel('T(C)')
+#    axs[0].legend(loc = 'upper right')
+#    
+#    axs[1].plot(graph_data.TimeDur, graph_data.Rsamp, label = 'Rsamp')
+#    axs[1].set_xlabel('times(s)')
+#    axs[1].set_ylabel('V(V)')
+#    #axs[1].legend(loc = 'upper left')
+#    
+    axs[0].plot(graph_data['T'], graph_data['Rsamp'], label = 'Rsamp')
+    axs[0].set_xlabel('Tavg(K)')
+    axs[0].set_ylabel('V(V)')
     #axs[2].legend(loc = 'lower left')
     
     plt.tight_layout()
