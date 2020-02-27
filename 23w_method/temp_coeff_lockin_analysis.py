@@ -18,8 +18,8 @@ import os
 #    newline = line.rstrip()
 #    newf.write(newline + '\n')
 #newf.close()
-df = pd.read_csv("200224//200224_23w_glass_R78_temp_coeff_5.txt", sep = ' ' ,
-                 header = 0, names = ['Date_Time', 'RTD', 'Vsamp'])
+df = pd.read_csv("200227//200227_23w_glass_R1718_R1516_temp_coeff_1.txt", sep = ',' ,
+                 header = 0, names = ['Date_Time', 'RTD', 'Vsamp2', 'Vsamp'])
 df['Date_Time'] = pd.to_datetime(df['Date_Time'])
 #datetime objects can be used as dictionary keys, so locate with internal index 'iloc'
 axtime = df['Date_Time']-df['Date_Time'].iloc[0]
@@ -77,4 +77,4 @@ ax1.text(2,1.002,'y = '+
 ax1.set_xlabel('dT (degree C)')
 ax1.set_ylabel('R/R0(Ohms)')
 
-plt.savefig('200224_glass_1_temp_coeff_5_plot',dpi = 300)
+plt.savefig('200227//200227_glass_1_R1516_temp_coeff_plot',dpi = 300)
