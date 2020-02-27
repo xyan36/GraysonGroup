@@ -16,25 +16,19 @@ import os
 rm = visa.ResourceManager()
 rm.list_resources()
 rtd = rm.open_resource('GPIB2::2::INSTR')
-#rtdr = rm.open_resource('GPIB2::1::INSTR')
-samp = rm.open_resource('GPIB2::9::INSTR')
-#fg = rm.open_resource('GPIB0::11::INSTR')
-#def init():
-    #mm1.write("*RST");
-    #mm1.write("SYST:BEEP:STAT OFF")
-#    rtdl.write(":SENS:FUNC 'RES'")
-#    rtdr.write(":SENS:FUNC 'RES'")
-    #samp.write(":SENS:FUNC 'FRES'")
-date = '200226'
+samp1 = rm.open_resource('GPIB2::9::INSTR')
+samp2 = rm.open_resource('GPIB2::18::INSTR')
+
+date = '200227'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
 
-FILENAME = date + '//' + date + '_' +"23w_glass_R1718_temp_coeff_1.txt"
+FILENAME = date + '//' + date + '_' +"23w_glass_R1718_R1516_temp_coeff_1.txt"
 #output = open(FILENAME,"w");
 with open(FILENAME, "w") as output:
-    output.write("Date_Time,RTD,Vsamp\n")
+    output.write("Date_Time,RTD,Vsamp1(R1718),Vsamp2(R1516)\n")
 
 #init();
 ##use fg to give a 5V DC heating
@@ -55,12 +49,12 @@ try:
     while True:
         ans1 = float( rtd.query(":sens:data:fres?"))
         #ans2 = float( rtdr.query(":sens:data:fres?"))
-        ans2 = float( samp.query("OUTP?1"))
-#        ans4 = float( samp.query("OUTP?1")) / I
+        ans2 = float( samp1.query("OUTP?1"))
+        ans3 = float( samp2.query("OUTP?1"))
         line = str(dt.datetime.now()) + "," \
                      + str(ans1) + ","  \
-                     + str(ans2) #+  " "  \
-#                     + str(ans3) #+  " "  \
+                     + str(ans2) +  ","  \
+                     + str(ans3) #+  " "  \
 #                     + str(ans4)
         with open(FILENAME, "a") as output:             
             output.write(line + "\n")

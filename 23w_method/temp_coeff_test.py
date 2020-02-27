@@ -68,6 +68,7 @@ try:
         with open(FILENAME, "a") as output:             
             output.write(line + "\n")
         print(line)
+        time.sleep(0.5)
 except KeyboardInterrupt:  
     pass
 
