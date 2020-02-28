@@ -147,6 +147,30 @@ def freqSweep(start,sens,initWaitTime):
             freq2 = float(lockin2.query('freq?'))
         #print(i,freq1,freq2)
         measurement(freq1,freq2,sens,initWaitTime)
+        
+def freqSweep_log(start,end,numOfPts,sens,initWaitTime):
+    listOfFreq = np.zeros(numOfPts)
+    logstep = np.log(end / 10) / (numOfPts * np.log(10))
+    for i in np.arange(0,numOfPts,1):
+        listOfFreq[i] = start * 10**(logstep * i)
+    for i in listOfFreq:
+        lockin1.write('FREQ %f' %i)
+        if (start < 1):
+            error = 0.01
+            sleep = 20#waiting for freq sync
+        else:
+            error = 1
+            sleep = 5
+        freq1 = float(lockin1.query('freq?'))
+        freq2 = float(lockin2.query('freq?'))
+        while (np.abs(i - freq1) > error or np.abs(i - freq2) > error):
+            time.sleep(sleep)
+            freq1 = float(lockin1.query('freq?'))
+            freq2 = float(lockin2.query('freq?'))
+        #print(i,freq1,freq2)
+        measurement(freq1,freq2,sens,initWaitTime)
+
+        
 #single freq measurement for f > 1kHz      
 def freqSweepSingle(start, sens,initWaitTime):
         lockin1.write('FREQ %f' %start)

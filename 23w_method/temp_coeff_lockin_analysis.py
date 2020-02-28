@@ -77,4 +77,4 @@ ax1.text(2,1.002,'y = '+
 ax1.set_xlabel('dT (degree C)')
 ax1.set_ylabel('R/R0(Ohms)')
 
-plt.savefig('200227//200227_glass_1_R1516_temp_coeff_plot',dpi = 300)
+#plt.savefig('200227//200227_glass_1_R1516_temp_coeff_plot',dpi = 300)
