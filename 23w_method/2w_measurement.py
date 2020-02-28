@@ -18,19 +18,19 @@ import visa
 import numpy as np
 import os
 ### basic parameters ###
-date = '200227'
+date = '200228'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
 
-FILENAME = date + '//' + date + '_' +"glass_R78_R1516_2w_measurement_3.txt"
+FILENAME = date + '//' + date + '_' +"glass_R78_R1516_2w_measurement_5.txt"
 
 rm = visa.ResourceManager();
 print(rm.list_resources())
 #fg = rm.open_resource("GPIB::11::INSTR")
-lockin1 = rm.open_resource("GPIB2::9::INSTR") #heater, 1w
-lockin2 = rm.open_resource("GPIB2::18::INSTR") #therm, 2w
+lockin1 = rm.open_resource("GPIB2::9::INSTR") #heater SINE OUT, therm 2w
+lockin2 = rm.open_resource("GPIB2::18::INSTR") #heater 1w
 lockin1.write("*cls")
 lockin2.write("*cls")
 #mm1 = rm.open_resource("GPIB::2::INSTR")
@@ -42,7 +42,7 @@ lockin2.write("*cls")
 #output = open(FILENAME,'w')
 t0 = time.time()
 ti = datetime.now()
-header = "Date_time Time TC SENS Lockin1f Lockin2f X1(h) Y1(h) X2(t) Y2(t)\n"
+header = "Date_time Time TC SENS Lockin1f Lockin2f X2 Y2 X1 Y1\n"
 with open(FILENAME, 'w') as output:
     output.write(header)
 
@@ -216,8 +216,8 @@ def freqSweepSingle(start, sens,initWaitTime):
       
         
 ##initialize lockin1 to 1w for heater, lockin2 to 2w for thermometer
-lockinInit_harmonics(lockin1, 1)
-lockinInit_harmonics(lockin2, 2)
+lockinInit_harmonics(lockin1, 2)
+lockinInit_harmonics(lockin2, 1)
 #Turn on DC power for thermometer (10V)
 lockin1.write("SLVL 5")
 
@@ -259,26 +259,26 @@ try:
     
     #freq sweep 20-200Hz
     timeCon = 11#
-    sensitivity1 = 26#500uV
-    sensitivity2 = 16#500uV
+    sensitivity1 = 16#500uV
+    sensitivity2 = 26#500uV
     sens = 1e-7#for 2w
-    waitTime = 3*60#s
+    waitTime = 2*60#s
     lockinsingle_set_pms(lockin1, timeCon,sensitivity1)
     lockinsingle_set_pms(lockin2, timeCon,sensitivity2)
     #freqSweep(20,sens,waitTime)
-    freqSweep_log(10,100,100,sens,waitTime)
+    freqSweep_log(10,2000,40,sens,waitTime)
     
     
-    #freq sweep 200-2000Hz
-    timeCon = 10#
-    sensitivity1 = 26#500uV
-    sensitivity2 = 16#500uV
-    sens = 1e-7#for 2w
-    waitTime = 3*60#s
-    lockinsingle_set_pms(lockin1, timeCon,sensitivity1)
-    lockinsingle_set_pms(lockin2, timeCon,sensitivity2)
-    #freqSweep(200,sens,waitTime)
-    freqSweep_range(101.57,2001.57,100,sens,waitTime)
+#    #freq sweep 200-2000Hz
+#    timeCon = 10#
+#    sensitivity1 = 26#500uV
+#    sensitivity2 = 16#500uV
+#    sens = 1e-7#for 2w
+#    waitTime = 3*60#s
+#    lockinsingle_set_pms(lockin1, timeCon,sensitivity1)
+#    lockinsingle_set_pms(lockin2, timeCon,sensitivity2)
+#    #freqSweep(200,sens,waitTime)
+#    freqSweep_range(101.57,2001.57,100,sens,waitTime)
     
     #
     ##freq sweep 1000-10000Hz
