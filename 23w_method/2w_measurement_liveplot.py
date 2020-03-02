@@ -24,7 +24,7 @@ interval = 1000
 #          'results/GaGdN-300K-190809_002.dat']
 #fname = '200203//200203_P_4_power_dep_f3p4_test2_2020-02-03 15-15-13.142605.txt'
 #fname = '200203//200203_P_4_power_dep_f3p4_test1_2020-02-03 14-48-22.718494.txt'
-fname = '200228//200228_glass_R78_R1516_2w_measurement_5.txt'
+fname = '200302//200302_glass_R65_R1817_2w_measurement_1.txt'
 #x_column = 'B_digital'
 #y_column = 'V_real_12'
 #x_columns = ['B_digital', 'B_digital']#, 'B_digital']
@@ -54,7 +54,7 @@ def animate_multi(i, axs, fname, color=None):
     axs[0].plot(graph_data.Lockin2f, graph_data.Y2)
     axs[0].set_xlabel('f(Hz)')
     axs[0].set_ylabel('Therm V2w(V)')
-    axs[0].set_ylim([-300e-6, 100e-6])
+    axs[0].set_ylim([-500e-6, 500e-6])
     axs[0].set_xscale('log')
     axs[0].legend(loc = 'upper right')
     

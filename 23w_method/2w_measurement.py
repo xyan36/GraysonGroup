@@ -18,13 +18,13 @@ import visa
 import numpy as np
 import os
 ### basic parameters ###
-date = '200228'
+date = '200302'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
 
-FILENAME = date + '//' + date + '_' +"glass_R78_R1516_2w_measurement_5.txt"
+FILENAME = date + '//' + date + '_' +"glass_R65_R1817_2w_measurement_1.txt"
 
 rm = visa.ResourceManager();
 print(rm.list_resources())
@@ -262,11 +262,11 @@ try:
     sensitivity1 = 16#500uV
     sensitivity2 = 26#500uV
     sens = 1e-7#for 2w
-    waitTime = 2*60#s
+    waitTime = 1*60#s
     lockinsingle_set_pms(lockin1, timeCon,sensitivity1)
     lockinsingle_set_pms(lockin2, timeCon,sensitivity2)
     #freqSweep(20,sens,waitTime)
-    freqSweep_log(10,2000,40,sens,waitTime)
+    freqSweep_log(10,2000,30,sens,waitTime)
     
     
 #    #freq sweep 200-2000Hz
