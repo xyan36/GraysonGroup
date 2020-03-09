@@ -18,27 +18,28 @@ import visa
 import numpy as np
 import os
 ### basic parameters ###
+date = '200309'
 try:
-    os.mkdir('200206')
+    os.mkdir(date)
 except FileExistsError:
     pass    
-TESTNAME = "200206//200206_P_4_3w_test2_0p01_0p1"
+FILENAME = date + '//' + date + '_' +"glass_R56_3w_measurement_1.txt"
 rm = visa.ResourceManager();
 print(rm.list_resources())
 #fg = rm.open_resource("GPIB::11::INSTR")
 lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample
 lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
+lockin1.write("*cls")
+lockin2.write("*cls")
 #mm1 = rm.open_resource("GPIB::2::INSTR")
 #lockin1.timeout = 25000
 #lockin2.timeout = 25000
 
 ### output file initialize ###
-FILENAME = TESTNAME + '_' + str(datetime.now()).replace(':','-') + ".txt"
-output = open(FILENAME,'w')
 t0 = time.time()
 ti = datetime.now()
 header = "Date_time Time TC SENS Lockin1f Lockin2f X3 Y3 X3_ref Y3_ref\n"
-with open(FILENAME, 'a') as output:
+with open(FILENAME, 'w') as output:
     output.write(header)
 
 ### lock in initialize ###
@@ -88,7 +89,12 @@ def lockinsingle_set_pms(lockin, timeCon, sensitivity):
     #time constant
     lockin.write("OFLT %d" %timeCon)
     #sensitivity
-    lockin.write("SENS %d" %sensitivity)
+    lockin.write("SENS %d" %sensitivity)   
+def lockinInit_harmonics(lockin, num):
+    #set lockins to measure the 3w voltage
+    lockin.write("HARM %d" %num)
+    #reserve mode : high reserve for 3w
+    lockin.write("RMOD 0")
 
 ### measurements ###
 def measurement(f1,f2,sens,initWaitTime): #sens= allowed error in reading
@@ -187,9 +193,7 @@ def freqSweepSingle(start, sens,initWaitTime):
             freq1 = float(lockin1.query('freq?'))
             freq2 = float(lockin2.query('freq?'))
         #print(i,freq1,freq2)
-        measurement(freq1,freq2,sens,initWaitTime)
-      
-        
+        measurement(freq1,freq2,sens,initWaitTime)        
 
 ####1w  measurement
 #freq0 = 23
@@ -223,88 +227,103 @@ def freqSweepSingle(start, sens,initWaitTime):
 #lockin1.write("SLVL 0.004")
 
 ##3w measurement
-lockinInit_3w()
+lockinInit_harmonics(lockin1, 3)
+lockinInit_harmonics(lockin2, 3)
+
 #fg.write("FUNC 0")
 #fg.write("AMPL0.315VR") #number is output voltage
 #fg.write("OUTE1") # fg output on
 
 
-lockin1.write("SLVL 1.8")
-
-##freq sweep 0.001-0.01Hz
-#timeCon = 17#
-#sensitivity = 17# 18 FOR 2V; 14#100 UV;
-#lockin_set_pms(timeCon,sensitivity)
-#sens = 1e-7
-#waitTime = 10*60#s
-#freqSweep(0.1,sens,waitTime)
-
-#freq sweep 0.01-0.1Hz
-timeCon = 15#
-sensitivity = 17# 18 FOR 2V; 14#100 UV;
-lockin_set_pms(timeCon,sensitivity)
-sens = 1e-7
-waitTime = 30*60#s
-freqSweep(0.01,sens,waitTime)
-
-##freq sweep 0.1-1Hz
-#timeCon = 13#
-#sensitivity = 17# 18 FOR 2V; 14#100 UV;
-#lockin_set_pms(timeCon,sensitivity)
-#sens = 1e-7
-#waitTime = 10*60#s
-#freqSweep(0.1,sens,waitTime)
-
-##freq sweep 1-10Hz
-#timeCon =  13#
-#sensitivity = 16#2mV
-#lockin_set_pms(timeCon,sensitivity)
-#sens = 1e-7#0.1e-3V
-#waitTime = 5*60#s
-#freqSweep(1,sens,waitTime)
-#
-##freq sweep 10-100Hz
-#timeCon = 12#
-#sensitivity = 16#500uV
-#lockin_set_pms(timeCon,sensitivity)
-#sens = 1e-7#0.01e-3#V
-#waitTime = 5*60#s
-#freqSweep(10,sens,waitTime)
-#
-##freq sweep 100-1000Hz
-#timeCon = 11#
-#sensitivity = 16# 500 uV
-#lockin_set_pms(timeCon, sensitivity)
-##lockinsingle_set_pms(lockin2, timeCon, 25)
-#sens = 1e-7#0.001e-3#V
-#waitTime = 5*60#s
-#freqSweep(100,sens,waitTime)
-#
-##freq sweep 1000-10000Hz
-#timeCon = 7#0.3s
-#sensitivity = 16#0.2mV
-#lockin_set_pms(timeCon,sensitivity)
-#sens = 1e-7#V
-#waitTime = 3*60#s
-#freqSweep(1000,sens,waitTime)
-#
-##freq sweep for f>10KHz
-#timeCon = 7#0.3s
-#sensitivity = 16#0.2mV
-#lockin_set_pms(timeCon,sensitivity)
-#sens = 1e-7#V
-#waitTime = 3*60#s
-#freqSweepSingle(10000, sens, waitTime)
-#freqSweepSingle(15000, sens, waitTime)
-#freqSweepSingle(20000, sens, waitTime)
-#freqSweepSingle(25000, sens, waitTime)
-#freqSweepSingle(30000, sens, waitTime)
-#
-lockin1.write('freq 17')
-lockin1.write("SLVL 0.004")
-lockinInit_1w()
-#fg.write("OUTE0") #fg output off
-#C
-output.close()# may record unfinished data
-tf = datetime.now()
-print ("Program done! total time is: "+ str(tf-ti))
+lockin1.write("SLVL 0.8")
+try:
+    ##freq sweep 0.001-0.01Hz
+    #timeCon = 17#
+    #sensitivity = 17# 18 FOR 2V; 14#100 UV;
+    #lockin_set_pms(timeCon,sensitivity)
+    #sens = 1e-7
+    #waitTime = 10*60#s
+    #freqSweep(0.1,sens,waitTime)
+    
+    #freq sweep 0.01-0.1Hz
+    #timeCon = 15#
+    #sensitivity = 17# 18 FOR 2V; 14#100 UV;
+    #lockin_set_pms(timeCon,sensitivity)
+    #sens = 1e-7
+    #waitTime = 30*60#s
+    #freqSweep(0.01,sens,waitTime)
+    
+    ##freq sweep 0.1-1Hz
+    #timeCon = 13#
+    #sensitivity = 17# 18 FOR 2V; 14#100 UV;
+    #lockin_set_pms(timeCon,sensitivity)
+    #sens = 1e-7
+    #waitTime = 10*60#s
+    #freqSweep(0.1,sens,waitTime)
+    
+    ##freq sweep 1-10Hz
+    #timeCon =  13#
+    #sensitivity = 16#2mV
+    #lockin_set_pms(timeCon,sensitivity)
+    #sens = 1e-7#0.1e-3V
+    #waitTime = 5*60#s
+    #freqSweep(1,sens,waitTime)
+    #
+    ##freq sweep 10-100Hz
+    #timeCon = 12#
+    #sensitivity = 16#500uV
+    #lockin_set_pms(timeCon,sensitivity)
+    #sens = 1e-7#0.01e-3#V
+    #waitTime = 5*60#s
+    #freqSweep(10,sens,waitTime)
+    #
+    timeCon = 11#
+    sensitivity1 = 16#500uV
+    sensitivity2 = 16#500uV
+    sens = 5e-7#for 2w
+    waitTime = 3*60#s
+    lockinsingle_set_pms(lockin1, timeCon,sensitivity1)
+    lockinsingle_set_pms(lockin2, timeCon,sensitivity2)
+    #freqSweep(20,sens,waitTime)
+    freqSweep_log(10,2000,20,sens,waitTime)
+    
+    ##freq sweep 100-1000Hz
+    #timeCon = 11#
+    #sensitivity = 16# 500 uV
+    #lockin_set_pms(timeCon, sensitivity)
+    ##lockinsingle_set_pms(lockin2, timeCon, 25)
+    #sens = 1e-7#0.001e-3#V
+    #waitTime = 5*60#s
+    #freqSweep(100,sens,waitTime)
+    #
+    ##freq sweep 1000-10000Hz
+    #timeCon = 7#0.3s
+    #sensitivity = 16#0.2mV
+    #lockin_set_pms(timeCon,sensitivity)
+    #sens = 1e-7#V
+    #waitTime = 3*60#s
+    #freqSweep(1000,sens,waitTime)
+    #
+    ##freq sweep for f>10KHz
+    #timeCon = 7#0.3s
+    #sensitivity = 16#0.2mV
+    #lockin_set_pms(timeCon,sensitivity)
+    #sens = 1e-7#V
+    #waitTime = 3*60#s
+    #freqSweepSingle(10000, sens, waitTime)
+    #freqSweepSingle(15000, sens, waitTime)
+    #freqSweepSingle(20000, sens, waitTime)
+    #freqSweepSingle(25000, sens, waitTime)
+    #freqSweepSingle(30000, sens, waitTime)
+    #
+except KeyboardInterrupt:
+    pass
+finally:
+    lockin1.write('freq 17')
+    lockin1.write("SLVL 0.004")
+    lockinInit_1w()
+    #fg.write("OUTE0") #fg output off
+    #C
+    output.close()# may record unfinished data
+    tf = datetime.now()
+    print ("Program done! total time is: "+ str(tf-ti))
