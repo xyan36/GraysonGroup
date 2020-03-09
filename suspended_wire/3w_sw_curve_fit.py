@@ -78,9 +78,9 @@ popt, pcov = curve_fit(V3w_fit_both, combo_Xdata, combo_Ydata, p0 = [10, 10])
 
 #df2 = pd.DataFrame({'freq': w1/(2*np.pi), 'w1':w1, 'X1_fit': V3w_real(w1,*popt), 'X1_exp': V3w_real(w1, 314, 130),
 #                    'Y1_fit': V3w_imag(w1,*popt2), 'Y1_exp': V3w_imag(w1, 314, 130)})
-result = pd.DataFrame({'X3_fit': popt_X3, 'Y3_fit': popt_Y3}, 
-                      index = ['Thermal conductivity k', 'Heat capacity c'],
-                      name = 'result')
+#result = pd.DataFrame({'X3_fit': popt[0], 'Y3_fit': popt[1]}, 
+#                      index = ['Thermal conductivity k', 'Heat capacity c'],
+#                      name = 'result')
 
 parameters = pd.DataFrame({'Temp coeff a': a, 'Re0': Re0, 'V1w_sp': V1w_sp,
                        'I1w': I1w, 'Suspended length 2l': 2*l, 
@@ -111,8 +111,8 @@ axs[1].set_ylim(graph_data.Y3.min() - 0.0001, graph_data.Y3.max() + 0.0001)
 
 #plt.subplots_adjust(hspace = 0.2,wspace = 0.2)
 plt.tight_layout()
-plt.savefig('200206//200206_P_4_3w_fit_2',dpi = 300)
-output = '200206//200206_P_4_3w_fit_result_1.csv'
-writeCSV(parameters, output)
-writeCSV(result, output)
+#plt.savefig('200206//200206_P_4_3w_fit_2',dpi = 300)
+#output = '200206//200206_P_4_3w_fit_result_1.csv'
+#writeCSV(parameters, output)
+#writeCSV(result, output)
 
