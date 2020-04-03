@@ -65,12 +65,12 @@ def lockinInit_1w():
     #reserve mode
     lockin1.write("RMOD 1")
     lockin2.write("RMOD 1")
-    #sensitivity
-    lockin1.write("SENS 22")
-    lockin2.write("SENS 22")
-    #time constant
-    lockin1.write("OFLT 9")
-    lockin2.write("OFLT 9")  
+#    #sensitivity
+#    lockin1.write("SENS 22")
+#    lockin2.write("SENS 22")
+#    #time constant
+#    lockin1.write("OFLT 9")
+#    lockin2.write("OFLT 9")  
 def lockinInit_3w():
     #set lockins to measure the 3w voltage
     lockin1.write("HARM 3")
@@ -195,36 +195,7 @@ def freqSweepSingle(start, sens,initWaitTime):
         #print(i,freq1,freq2)
         measurement(freq1,freq2,sens,initWaitTime)        
 
-####1w  measurement
-#freq0 = 23
-#sens = 0.001e-3
-#lockin1.write('FREQ %d' %freq0)
-#lockinInit_1w()
-###set source voltage
-#lockin1.write("SLVL 3")
-##output.write("1w voltages:\n")
-#f1 = float(freq0)
-#f2 = float(freq0)
-#time.sleep(2)
-#X1 = float(lockin1.query("OUTP?1"))
-#Y1 = float(lockin1.query("OUTP?2"))
-#X2 = float(lockin2.query("OUTP?1"))
-#Y2 = float(lockin2.query("OUTP?2"))
-##    #check reading to be stable
-#while (np.abs(X1 - float(lockin1.query('OUTP?1')))> sens
-#    or np.abs(X2 - float(lockin2.query('OUTP?1')))> sens):
-#    time.sleep(0.5)
-#    X1 = float(lockin1.query("OUTP?1"))
-#    Y1 = float(lockin1.query("OUTP?2"))
-#    X2 = float(lockin2.query("OUTP?1"))
-#    Y2 = float(lockin2.query("OUTP?2"))
-#t = float(time.clock()-t0)
-#line = str(t) + " " + str(f1) + " " + str(f2) + " "  \
-#        + str(X1) + " " + str(Y1) + " "  \
-#        + str(X2) + " " + str(Y2) + " " + str(datetime.now())
-#print(line)
-##output.write("end of 1w mesurement\n")
-#lockin1.write("SLVL 0.004")
+
 
 ##3w measurement
 lockinInit_harmonics(lockin1, 3)
