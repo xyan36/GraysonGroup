@@ -18,12 +18,12 @@ import visa
 import numpy as np
 import os
 ### basic parameters ###
-date = '200310'
+date = '200406'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = date + '//' + date + '_' +"glass_R43_3w_measurement_1.txt"
+FILENAME = date + '//' + date + '_' +"glass_R65_3w_measurement_2.txt"
 rm = visa.ResourceManager();
 print(rm.list_resources())
 #fg = rm.open_resource("GPIB::11::INSTR")
@@ -122,7 +122,7 @@ def measurement(f1,f2,sens,initWaitTime): #sens= allowed error in reading
     t = float(time.time()-t0)
     timeCon = int(lockin1.query('OFLT?'))
     SENS = int(lockin1.query('SENS?'))
-    line = str(datetime.now()) + str(t) + " " \
+    line = str(datetime.now()) + " " + str(t) + " " \
     + str(timeCon) + " " + str(SENS) + " "  \
     + str(f1) + " " + str(f2) + " "  \
     + str(X3) + " " + str(Y3) + " "  \
@@ -206,7 +206,7 @@ lockinInit_harmonics(lockin2, 3)
 #fg.write("OUTE1") # fg output on
 
 
-lockin1.write("SLVL 0.8")
+lockin1.write("SLVL 1.6")
 try:
     ##freq sweep 0.001-0.01Hz
     #timeCon = 17#
@@ -252,7 +252,7 @@ try:
     sensitivity1 = 16#500uV
     sensitivity2 = 16#500uV
     sens = 5e-7#for 2w
-    waitTime = 3*60#s
+    waitTime = 5*60#s
     lockinsingle_set_pms(lockin1, timeCon,sensitivity1)
     lockinsingle_set_pms(lockin2, timeCon,sensitivity2)
     #freqSweep(20,sens,waitTime)
@@ -292,7 +292,7 @@ except KeyboardInterrupt:
 finally:
     lockin1.write('freq 17')
     lockin1.write("SLVL 0.004")
-    lockinInit_1w()
+#    lockinInit_1w()
     #fg.write("OUTE0") #fg output off
     #C
     output.close()# may record unfinished data

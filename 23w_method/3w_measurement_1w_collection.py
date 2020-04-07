@@ -9,21 +9,6 @@ import time
 import visa
 import numpy as np
 import os
-### basic parameters ###
-date = '200310'
-try:
-    os.mkdir(date)
-except FileExistsError:
-    pass    
-FILENAME = date + '//' + date + '_' +"glass_R43_3w_measurement_1.txt"
-rm = visa.ResourceManager();
-print(rm.list_resources())
-#fg = rm.open_resource("GPIB::11::INSTR")
-lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample
-lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
-lockin1.write("*cls")
-lockin2.write("*cls")
-t0 = time.time()
 
 ### lock in initialize ###
 
@@ -61,46 +46,103 @@ def lockinsingle_set_pms(lockin, timeCon, sensitivity):
     lockin.write("OFLT %d" %timeCon)
     #sensitivity
     lockin.write("SENS %d" %sensitivity)   
+    
+### measurements ###
+def measurement(f1,f2,sens,initWaitTime): #sens= allowed error in reading
+    X3 = float(lockin1.query("OUTP?1"))
+    Y3 = float(lockin1.query("OUTP?2"))
+    X3_ref = float(lockin2.query("OUTP?1"))
+    Y3_ref = float(lockin2.query("OUTP?2"))
+    time.sleep(initWaitTime) #initial wait time
+    X33 = float(lockin1.query("OUTP?1"))
+#    Y11 = float(lockin1.query("OUTP?2"))
+    X33_ref = float(lockin2.query("OUTP?1"))
+#    Y22 = float(lockin2.query("OUTP?2"))
+    #check reading to be stable
+    while (np.abs(X3 - X33)> sens
+        or np.abs(X3_ref - X33_ref)> sens):
+        X33 = float(lockin1.query("OUTP?1"))
+#        Y11 = float(lockin1.query("OUTP?2"))
+        X33_ref = float(lockin2.query("OUTP?1"))
+#        Y22 = float(lockin2.query("OUTP?2"))
+        time.sleep(5) #additional wait time
+        X3 = float(lockin1.query("OUTP?1"))
+        Y3 = float(lockin1.query("OUTP?2"))
+        X3_ref = float(lockin2.query("OUTP?1"))
+        Y3_ref = float(lockin2.query("OUTP?2"))     
+    t = float(time.time()-t0)
+    timeCon = int(lockin1.query('OFLT?'))
+    SENS = int(lockin1.query('SENS?'))
+    line = str(datetime.now()) +" " + str(t) + " " \
+    + str(timeCon) + " " + str(SENS) + " "  \
+    + str(f1) + " " + str(f2) + " "  \
+    + str(X3) + " " + str(Y3) + " "  \
+    + str(X3_ref) + " " + str(Y3_ref)
+    print(line)
+    try:
+        user = input('Record the readings? y/n: ')
+        while (user == 'n'):
+            print('Not recorded.')
+            user = input('Record the readings? y/n: ')
+        if (user == 'y'):
+            with open(FILENAME, 'a') as output:
+                output.write(line + '\n')
+                print('Data Recorded.')
+    except KeyboardInterrupt:
+        print('Keyboard Interrupt.')
+    finally:
+        return
+        
+def freqSweepSingle(start, sens,initWaitTime):
+        lockin1.write('FREQ %f' %start)
+        if (start < 1):
+            error = 0.01
+            sleep = 55#waiting for freq sync
+        else:
+            error = 1
+            sleep = 5#waiting for freq sync
+        freq1 = float(lockin1.query('freq?'))
+        freq2 = float(lockin2.query('freq?'))
+        while (np.abs(start - freq1) > error or np.abs(start - freq2) > error):
+            time.sleep(sleep)
+            freq1 = float(lockin1.query('freq?'))
+            freq2 = float(lockin2.query('freq?'))
+        #print(i,freq1,freq2)
+        measurement(freq1,freq2,sens,initWaitTime)    
 
-###1w  measurement
-output1w = open(FILENAME[:-4] + '_1w.txt', 'w')
+###1w  measurement ###
+### basic parameters ###
+date = '200406'
+try:
+    os.mkdir(date)
+except FileExistsError:
+    pass    
+FILENAME = date + '//' + date + '_' +"glass_R65_3w_measurement_1_1w_2.txt"
 header = "Date_time Time TC SENS Lockin1f Lockin2f X1 Y1 X1_ref Y1_ref\n"
-freq0 = 23
-sens = 0.001e-3
-timeCon = 9
-sensitivity = 22
-lockinsingle_set_pms(lockin1, timeCon, sensitivity)
-lockinsingle_set_pms(lockin2, timeCon, sensitivity)
-lockin1.write('FREQ %d' %freq0)
-lockinInit_1w()
-##set source voltage
-Vs = 3;
-lockin1.write("SLVL %d" %Vs)
-output1w.write("1w input voltage: %d V\n" %Vs)
-output1w.write(header)
-f1 = float(freq0)
-f2 = float(freq0)
-time.sleep(10)
-X1 = float(lockin1.query("OUTP?1"))
-Y1 = float(lockin1.query("OUTP?2"))
-X2 = float(lockin2.query("OUTP?1"))
-Y2 = float(lockin2.query("OUTP?2"))
-#    #check reading to be stable
-while (np.abs(X1 - float(lockin1.query('OUTP?1')))> sens
-    or np.abs(X2 - float(lockin2.query('OUTP?1')))> sens):
-    time.sleep(0.5)
-    X1 = float(lockin1.query("OUTP?1"))
-    Y1 = float(lockin1.query("OUTP?2"))
-    X2 = float(lockin2.query("OUTP?1"))
-    Y2 = float(lockin2.query("OUTP?2"))
-timeCon = int(lockin1.query('OFLT?'))
-SENS = int(lockin1.query('SENS?'))
-t = float(time.time()-t0)
-line = str(datetime.now()) + str(t) + " " + str(timeCon) + " " + \
-        str(SENS) + " " + str(f1) + " " + str(f2) + " "  \
-        + str(X1) + " " + str(Y1) + " "  \
-        + str(X2) + " " + str(Y2)
-print(line)
-output1w.write(line)
-lockin1.write("SLVL 0.004")
+rm = visa.ResourceManager();
+print(rm.list_resources())
+lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample
+lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
+lockin1.write("*cls")
+lockin2.write("*cls")
+t0 = time.time()
+Vs = 1.6 #source voltage
+freq = 17
+sens = 0.001e-3 #allowed error in data
+#timeCon = 9
+#sensitivity = 22
+initWaitime = 1
+
+#lockinInit_1w()
+lockin1.write("SLVL %f" %Vs)
+lockin1.write('FREQ %f' %freq)
+#lockinsingle_set_pms(lockin1, timeCon, sensitivity)
+#lockinsingle_set_pms(lockin2, timeCon, sensitivity)
+with open(FILENAME,'w') as output1w:
+    output1w.write("1w input voltage: %f V\n" %Vs)
+    output1w.write(header)
+
+freqSweepSingle(freq, sens, initWaitime)
+
+#lockin1.write("SLVL 0.004")
 print("End of 1w measurement")
