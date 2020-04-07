@@ -112,12 +112,12 @@ def freqSweepSingle(start, sens,initWaitTime):
 
 ###1w  measurement ###
 ### basic parameters ###
-date = '200406'
+date = '200407'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = date + '//' + date + '_' +"glass_R65_3w_measurement_1_1w_2.txt"
+FILENAME = date + '//' + date + '_' +"glass_R43_3w_measurement_2_1w.txt"
 header = "Date_time Time TC SENS Lockin1f Lockin2f X1 Y1 X1_ref Y1_ref\n"
 rm = visa.ResourceManager();
 print(rm.list_resources())
@@ -129,20 +129,22 @@ t0 = time.time()
 Vs = 1.6 #source voltage
 freq = 17
 sens = 0.001e-3 #allowed error in data
-#timeCon = 9
-#sensitivity = 22
+timeCon = 9
+sensitivity = 24
 initWaitime = 1
 
 #lockinInit_1w()
+lockin1.write("HARM 1")
+lockin2.write("HARM 1")
+lockinsingle_set_pms(lockin1, timeCon, sensitivity)
+lockinsingle_set_pms(lockin2, timeCon, sensitivity)
 lockin1.write("SLVL %f" %Vs)
 lockin1.write('FREQ %f' %freq)
-#lockinsingle_set_pms(lockin1, timeCon, sensitivity)
-#lockinsingle_set_pms(lockin2, timeCon, sensitivity)
 with open(FILENAME,'w') as output1w:
     output1w.write("1w input voltage: %f V\n" %Vs)
     output1w.write(header)
 
 freqSweepSingle(freq, sens, initWaitime)
 
-#lockin1.write("SLVL 0.004")
+lockin1.write("SLVL 0.004")
 print("End of 1w measurement")
