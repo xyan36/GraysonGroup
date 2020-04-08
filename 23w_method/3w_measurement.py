@@ -18,12 +18,12 @@ import visa
 import numpy as np
 import os
 ### basic parameters ###
-date = '200407'
+date = '200408'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = date + '//' + date + '_' +"glass_R43_3w_measurement_2.txt"
+FILENAME = date + '//' + date + '_' +"glass_R1516_3w_measurement_2.txt"
 rm = visa.ResourceManager();
 print(rm.list_resources())
 #fg = rm.open_resource("GPIB::11::INSTR")

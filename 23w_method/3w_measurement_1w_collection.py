@@ -112,12 +112,12 @@ def freqSweepSingle(start, sens,initWaitTime):
 
 ###1w  measurement ###
 ### basic parameters ###
-date = '200407'
+date = '200408'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = date + '//' + date + '_' +"glass_R43_3w_measurement_2_1w.txt"
+FILENAME = date + '//' + date + '_' +"glass_R1516_3w_measurement_2_1w.txt"
 header = "Date_time Time TC SENS Lockin1f Lockin2f X1 Y1 X1_ref Y1_ref\n"
 rm = visa.ResourceManager();
 print(rm.list_resources())
@@ -131,7 +131,7 @@ freq = 17
 sens = 0.001e-3 #allowed error in data
 timeCon = 9
 sensitivity = 24
-initWaitime = 1
+initWaitime = 10
 
 #lockinInit_1w()
 lockin1.write("HARM 1")
