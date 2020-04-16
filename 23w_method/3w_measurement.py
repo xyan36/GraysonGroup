@@ -38,7 +38,7 @@ lockin2.write("*cls")
 ### output file initialize ###
 t0 = time.time()
 ti = datetime.now()
-header = "Date_time Time TC SENS Lockin1f Lockin2f X3 Y3 X3_ref Y3_ref\n"
+header = "Date time Time TC SENS Lockin1f Lockin2f X3 Y3 X3_ref Y3_ref\n"
 with open(FILENAME, 'w') as output:
     output.write(header)
 
