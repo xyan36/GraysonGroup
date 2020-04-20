@@ -1,26 +1,25 @@
 %%3w power dependence
 %fname1 = '200309\200309_glass_R56_3w_measurement_1.txt';
-%fname2 = '200406\200406_glass_R65_3w_measurement_2.txt';
-fname2 = '200407\200407_glass_R43_3w_measurement_2.txt';
-fname1 = '200310\200310_glass_R43_3w_measurement_1.txt';
+fname2 = '200406\200406_glass_R65_3w_measurement_2.txt';
+fname = '200407\200407_glass_R43_3w_measurement_2.txt'
 data1 = readtable(fname1);
 data2 = readtable(fname2);
 data1.X3_pure = data1.X3 - mean(data1.X3_ref);
 data2.X3_pure = data2.X3 - mean(data2.X3_ref);
-%Rname = 'R56';
-Rname = 'R43';
-Re0 = 38.86;%40.20; %3w_1 old value
+Rname = 'R56';
+
+Re0 = 40.20; %3w_1 old value
 L = 2.15e-3; %---- estimated --- #length between V1w contacts
 alpha = (0.002015 + 0.002005 + 0.001989 + 0.001988) / 4;
-X1_1 = 66.86e-3;%69.21e-3;
-X1_2 = 0.132249;%0.136682;
+X1_1 = 69.21e-3;
+X1_2 = 0.136682;
 I1w_1 = X1_1 / Re0;
 I1w_2 = X1_2 / Re0;
 P_1 = X1_1^2 / (Re0 * L); %power / unit length
 P_2 = X1_2^2 / (Re0 * L);
 data1.T_avg = data1.X3_pure / (-1/2 * alpha * X1_1 * P_1);
 data2.T_avg = data2.X3_pure / (-1/2 * alpha * X1_2 * P_2);
-%f = 10,37.6,108.5Hz
+%f = 10,108.5Hz
 X3_1 = [data1.X3_pure(data1.Lockin1f == 10), ...
     data1.X3_pure(data1.Lockin1f == 37.6), data1.X3_pure(data1.Lockin1f == 108.5)];
 X3_2 = [data2.X3_pure(data2.Lockin1f == 10), ...
@@ -53,4 +52,4 @@ str = sprintf(' X3_3 = (%0.3e) * I1w^3 + (%0.3e)', p3(:));
 text(1.5e-8, -2.5e-5, str)
 xlabel('I1w^3(A^3)')
 ylabel('X3(V)')
-saveas(f1,['200407\', Rname,'_3w_power_dep_in_a_shell.jpg'])
+%saveas(f1,['200406\', Rname,'_3w_power_dep_in_a_shell.jpg'])
