@@ -22,9 +22,7 @@ interval = 1000
 
 #fnames = ['results/GaGdN-300K-190809_001.dat',
 #          'results/GaGdN-300K-190809_002.dat']
-#fname = '200203//200203_P_4_power_dep_f3p4_test2_2020-02-03 15-15-13.142605.txt'
-#fname = '200203//200203_P_4_power_dep_f3p4_test1_2020-02-03 14-48-22.718494.txt'
-fname = '200204//200204_P_4_power_dep_f3p4_test5_2020-02-04 12-28-12.022227.txt'
+fname = '200416//200416_glass_R56_power_dep_f50.txt'
 #x_column = 'B_digital'
 #y_column = 'V_real_12'
 #x_columns = ['B_digital', 'B_digital']#, 'B_digital']
@@ -47,25 +45,25 @@ def animate_multi(i, axs, fname, color=None):
         ax.clear()
     graph_data = pd.read_csv(fname, sep = ' ', header = 0)
       
-    axs[0].plot(graph_data.Time, graph_data.X1, label = 'X1')
-    axs[0].plot(graph_data.Time, graph_data.Y1, label = 'Y1')
-    axs[0].plot(graph_data.Time, graph_data.X1_ref, label = 'X1_ref')
-    axs[0].plot(graph_data.Time, graph_data.Y1_ref, label = 'Y1_ref')
-    axs[0].set_xlabel('times(s)')
+    axs[0].plot(graph_data.Time/60, graph_data.X1, label = 'X1')
+    axs[0].plot(graph_data.Time/60, graph_data.Y1, label = 'Y1')
+    axs[0].plot(graph_data.Time/60, graph_data.X1_ref, label = 'X1_ref')
+    axs[0].plot(graph_data.Time/60, graph_data.Y1_ref, label = 'Y1_ref')
+    axs[0].set_xlabel('time(min)')
     axs[0].set_ylabel('V1w(V)')
     axs[0].legend(loc = 'upper right')
     
-    axs[1].plot(graph_data.Time, graph_data.X3, label = 'X3')
-    axs[1].plot(graph_data.Time, graph_data.Y3, label = 'Y3')
-    axs[1].plot(graph_data.Time, graph_data.X3_ref, label = 'X3_ref')
-    axs[1].plot(graph_data.Time, graph_data.Y3_ref, label = 'Y3_ref')
-    axs[1].set_xlabel('times(s)')
+    axs[1].plot(graph_data.Time/60, graph_data.X3, label = 'X3')
+    axs[1].plot(graph_data.Time/60, graph_data.Y3, label = 'Y3')
+    axs[1].plot(graph_data.Time/60, graph_data.X3_ref, label = 'X3_ref')
+    axs[1].plot(graph_data.Time/60, graph_data.Y3_ref, label = 'Y3_ref')
+    axs[1].set_xlabel('time(min)')
     axs[1].set_ylabel('V3w(V)')
     axs[1].legend(loc = 'upper right')
     #axs[2].legend(loc = 'lower left')
-    Rref = 3.5
+    Rref = 39.4
     graph_data['I1w'] = graph_data['X1_ref']/Rref
-    axs[2].plot((graph_data['I1w'])**3, graph_data.Y3, label = 'Y3')
+    axs[2].plot((graph_data['I1w'])**3, graph_data.X3, label = 'X3')
     axs[2].set_xlabel('I1w^3(A^3)')
     axs[2].set_ylabel('V3w(V)')
     axs[2].legend(loc = 'upper right')

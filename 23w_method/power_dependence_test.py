@@ -17,7 +17,7 @@ try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = date + '//' + date + '_' +"glass_R56_power_dep_f3p4.txt"
+FILENAME = date + '//' + date + '_' +"glass_R56_power_dep_f50.txt"
 rm = visa.ResourceManager();
 print(rm.list_resources())
 #fg = rm.open_resource("GPIB::9::INSTR")
@@ -113,7 +113,7 @@ def VoltageSweep(voltages,sens1, TC1, SENS1, initWaitTime1, sens3, TC3, SENS3, i
             output.write(str(datetime.now()) + " " + str(t) + " " + line +"\n")
 
 
-freq = 3.4 #Hz
+freq = 50 #Hz
 lockin1.write('FREQ %f' %freq)
 voltages = np.array([0.004, 0.1, 0.2, 0.4, 0.6, 0.8, 
                      1, 1.2, 1.4, 1.6, 1.8])
