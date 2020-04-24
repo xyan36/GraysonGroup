@@ -27,7 +27,7 @@ switch fname
     otherwise
         disp('invalid case');
 end
-Lh =  2.15e-3; %m %-------------estimated, need to check autocad
+Lh =  1.83e-3;%2.15e-3; %m %-------------estimated, need to check autocad
 alpha = (0.002015 + 0.002005 + 0.001989 + 0.001988) / 4;
 % Rh = 39.75;%38.86;%40.20;%39.75;
 % Rt = 39.92;%39.79;%40.27;%39.92;

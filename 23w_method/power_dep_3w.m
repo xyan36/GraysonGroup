@@ -1,14 +1,14 @@
 %%3w power dependence
 %fname1 = '200309\200309_glass_R56_3w_measurement_1.txt';
 %fname2 = '200406\200406_glass_R65_3w_measurement_2.txt';
-fname2 = '200407\200407_glass_R43_3w_measurement_2.txt';
-fname1 = '200310\200310_glass_R43_3w_measurement_1.txt';
+%fname2 = '200407\200407_glass_R43_3w_measurement_2.txt';
+%fname1 = '200310\200310_glass_R43_3w_measurement_1.txt';
 data1 = readtable(fname1);
 data2 = readtable(fname2);
 data1.X3_pure = data1.X3 - mean(data1.X3_ref);
 data2.X3_pure = data2.X3 - mean(data2.X3_ref);
-%Rname = 'R56';
-Rname = 'R43';
+Rname = 'R56';
+%Rname = 'R43';
 Re0 = 38.86;%40.20; %3w_1 old value
 L = 2.15e-3; %---- estimated --- #length between V1w contacts
 alpha = (0.002015 + 0.002005 + 0.001989 + 0.001988) / 4;

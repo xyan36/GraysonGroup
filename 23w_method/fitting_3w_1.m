@@ -32,7 +32,7 @@ data.f = data.Lockin1f;
 X3_offset = 0;%-1.7497e-05; %intercept from power dependence 3w analysis)
 data.X3_pure = data.X3 - mean(data.X3_ref) - X3_offset; %expected offset = 2.58e-5V
 data.Y3_pure = data.Y3 - mean(data.Y3_ref)- X3_offset;
-L = 2.15e-3; %---- estimated --- #length between V1w contacts
+L = 1.83e-3;%2.15e-3; %---- estimated --- #length between V1w contacts
 P = V1w^2 / (Re0 * L); %power / unit length
 data.T_avg = data.X3_pure / (-1/2 * alpha * V1w * P);
 data.T_avg_img = data.Y3_pure / (-1/2 * alpha * V1w * P);

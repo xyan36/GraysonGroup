@@ -11,16 +11,16 @@ import visa
 import numpy as np
 import os
 
-### basic parameters ###
+### crate a folder with today's date and create a new file name ###
 date = '200416'
 try:
     os.mkdir(date)
 except FileExistsError:
-    pass    
+    pass
 FILENAME = date + '//' + date + '_' +"glass_R56_power_dep_f50.txt"
+
 rm = visa.ResourceManager();
 print(rm.list_resources())
-#fg = rm.open_resource("GPIB::9::INSTR")
 lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample & SINE_OUT source
 lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
 t0 = time.time()
@@ -29,7 +29,7 @@ header = "Date time Time V_input X1 Y1 X1_ref Y1_ref X3 Y3 X3_ref Y3_ref\n"
 with open(FILENAME,'w') as output:
     output.write(header)
 
-### lock in initialize ###
+### lock in 1w initialize ###
 def lockinInit_1w():
     #set lockin1 to internal (1), lockin2 to external(0)
     #lockin1.write("FMOD 0")
@@ -52,13 +52,8 @@ def lockinInit_1w():
 #    #reserve mode
 #    lockin1.write("RMOD 1")
 #    lockin2.write("RMOD 1")
-    #sensitivity
-    #lockin1.write("SENS 22")
-    #lockin2.write("SENS 22")
-    #time constant
-    #lockin1.write("OFLT 9")
-    #lockin2.write("OFLT 9")
 
+### lock in 3w initialize ###
 def lockinInit_3w():
     #set lockins to measure the 3w voltage
     lockin1.write("HARM 3")
@@ -112,10 +107,9 @@ def VoltageSweep(voltages,sens1, TC1, SENS1, initWaitTime1, sens3, TC3, SENS3, i
         with open(FILENAME,'a') as output:
             output.write(str(datetime.now()) + " " + str(t) + " " + line +"\n")
 
-
+### Set the parameters ###
 freq = 50 #Hz
-lockin1.write('FREQ %f' %freq)
-voltages = np.array([0.004, 0.1, 0.2, 0.4, 0.6, 0.8, 
+voltages = np.array([0.004, 0.1, 0.2, 0.4, 0.6, 0.8,
                      1, 1.2, 1.4, 1.6, 1.8])
 sens1 = 1e-3#allowed error
 timeCon1 = 10#time const for 1w measurement
@@ -126,7 +120,10 @@ sens3 = 1e-6#allowed error
 timeCon3 = 11#time const for 3w measurement
 sensitivity3 = 16#sensitivity for 3w measurement
 initWaitTime3 = 300 #s
-VoltageSweep(voltages, sens1, timeCon1, sensitivity1, initWaitTime1, sens3, timeCon3, sensitivity3, initWaitTime3)
+
+lockin1.write('FREQ %f' %freq)
+VoltageSweep(voltages, sens1, timeCon1, sensitivity1, initWaitTime1,
+            sens3, timeCon3, sensitivity3, initWaitTime3)
 
 lockin1.write("SLVL %f" %0.004)
 lockinInit_1w()
