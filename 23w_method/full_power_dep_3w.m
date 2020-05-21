@@ -97,7 +97,7 @@ legend(h([1,3,5,7]))
 xlabel('I_{1w}^3(A)')
 ylabel('V3w_{pure}(V)')
 title([Rname, ' I_{1w}^3 vs. V_{3wpure}'])
-saveas(f5, [fsave, Rname, '_I_1w_vs_X3_pure.jpg'])
+%saveas(f5, [fsave, Rname, '_I_1w_vs_X3_pure.jpg'])
 
 f6 = figure;
 hold on
@@ -118,7 +118,7 @@ ylabel('V3w(V)')
 title([Rname, ' I_{1w}^3 vs. V_{3w}'])
 text(2e-8,-12e-6, 'X3')
 text(2e-8,0, 'Y3')
-saveas(f6, [fsave, Rname, '_I_1w_vs_X3.jpg'])
+%saveas(f6, [fsave, Rname, '_I_1w_vs_X3.jpg'])
 
 f7 = figure;
 hold on
@@ -139,4 +139,4 @@ ylabel('V3w_ref(V)')
 title([Rname, ' I_{1w}^3 vs. V_{3wref}'])
 text(2e-8,10e-6, 'X3')
 text(2e-8,0, 'Y3')
-saveas(f7, [fsave, Rname, '_I_1w_vs_X3_ref.jpg'])
+%saveas(f7, [fsave, Rname, '_I_1w_vs_X3_ref.jpg'])

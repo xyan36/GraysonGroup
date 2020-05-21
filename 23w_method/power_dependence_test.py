@@ -11,24 +11,7 @@ import visa
 import numpy as np
 import os
 
-### crate a folder with today's date and create a new file name ###
-date = '200416'
-try:
-    os.mkdir(date)
-except FileExistsError:
-    pass
-FILENAME = date + '//' + date + '_' +"glass_R56_power_dep_f50.txt"
-
-rm = visa.ResourceManager();
-print(rm.list_resources())
-lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample & SINE_OUT source
-lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
-t0 = time.time()
-ti = datetime.now()
-header = "Date time Time V_input X1 Y1 X1_ref Y1_ref X3 Y3 X3_ref Y3_ref\n"
-with open(FILENAME,'w') as output:
-    output.write(header)
-
+########### function defitions ################################################
 ### lock in 1w initialize ###
 def lockinInit_1w():
     #set lockin1 to internal (1), lockin2 to external(0)
@@ -106,17 +89,36 @@ def VoltageSweep(voltages,sens1, TC1, SENS1, initWaitTime1, sens3, TC3, SENS3, i
         print(str(datetime.now()) + " " + str(t) + " " + line)
         with open(FILENAME,'a') as output:
             output.write(str(datetime.now()) + " " + str(t) + " " + line +"\n")
+ ##############################################################################
+           
+### crate a folder with today's date and create a new file name ###
+date = '200416'
+try:
+    os.mkdir(date)
+except FileExistsError:
+    pass
+FILENAME = date + '//' + date + '_' +"glass_R56_power_dep_f50.txt"
+        
+rm = visa.ResourceManager();
+print(rm.list_resources())
+lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample & SINE_OUT source
+lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
+t0 = time.time()
+ti = datetime.now()
+header = "Date time Time V_input X1 Y1 X1_ref Y1_ref X3 Y3 X3_ref Y3_ref\n"
+with open(FILENAME,'w') as output:
+    output.write(header)
 
 ### Set the parameters ###
 freq = 50 #Hz
 voltages = np.array([0.004, 0.1, 0.2, 0.4, 0.6, 0.8,
                      1, 1.2, 1.4, 1.6, 1.8])
-sens1 = 1e-3#allowed error
+sens1 = 1e-3#allowed error for 1w
 timeCon1 = 10#time const for 1w measurement
 sensitivity1 = 24#sensitivity for 1w measurement
 initWaitTime1 = 60 #s
 
-sens3 = 1e-6#allowed error
+sens3 = 1e-6#allowed error for 3w
 timeCon3 = 11#time const for 3w measurement
 sensitivity3 = 16#sensitivity for 3w measurement
 initWaitTime3 = 300 #s

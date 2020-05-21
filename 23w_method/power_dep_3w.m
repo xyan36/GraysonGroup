@@ -1,56 +1,63 @@
-%%3w power dependence
+%%3w power dependence fit
 %fname1 = '200309\200309_glass_R56_3w_measurement_1.txt';
 %fname2 = '200406\200406_glass_R65_3w_measurement_2.txt';
 %fname2 = '200407\200407_glass_R43_3w_measurement_2.txt';
 %fname1 = '200310\200310_glass_R43_3w_measurement_1.txt';
-data1 = readtable(fname1);
-data2 = readtable(fname2);
-data1.X3_pure = data1.X3 - mean(data1.X3_ref);
-data2.X3_pure = data2.X3 - mean(data2.X3_ref);
+f3p4 = readtable('200416\200416_glass_R56_power_dep_f3p4.txt');
+f15 =  readtable('200416\200416_glass_R56_power_dep_f15.txt');
+f30 = readtable('200416\200416_glass_R56_power_dep_f30.txt');
+f50 = readtable('200416\200416_glass_R56_power_dep_f50.txt');
+
 Rname = 'R56';
 %Rname = 'R43';
-Re0 = 38.86;%40.20; %3w_1 old value
-L = 2.15e-3; %---- estimated --- #length between V1w contacts
+Re0 = 40.2;%38.86;%40.20; %3w_1 old value
+L = 1.83e-3; %---- estimated --- #length between V1w contacts
 alpha = (0.002015 + 0.002005 + 0.001989 + 0.001988) / 4;
-X1_1 = 66.86e-3;%69.21e-3;
-X1_2 = 0.132249;%0.136682;
-I1w_1 = X1_1 / Re0;
-I1w_2 = X1_2 / Re0;
-P_1 = X1_1^2 / (Re0 * L); %power / unit length
-P_2 = X1_2^2 / (Re0 * L);
-data1.T_avg = data1.X3_pure / (-1/2 * alpha * X1_1 * P_1);
-data2.T_avg = data2.X3_pure / (-1/2 * alpha * X1_2 * P_2);
-%f = 10,37.6,108.5Hz
-X3_1 = [data1.X3_pure(data1.Lockin1f == 10), ...
-    data1.X3_pure(data1.Lockin1f == 37.6), data1.X3_pure(data1.Lockin1f == 108.5)];
-X3_2 = [data2.X3_pure(data2.Lockin1f == 10), ...
-    data2.X3_pure(data1.Lockin1f == 37.6), data2.X3_pure(data2.Lockin1f == 108.5)];
 
-I1w3 = [I1w_1^3; I1w_2^3];
-X3 = [X3_1;X3_2];
+freqs = [3.4, 15, 30, 50];
 
-p1 = polyfit(I1w3,X3(:,1),1);
-p2 = polyfit(I1w3,X3(:,2),1);
-p3 = polyfit(I1w3,X3(:,3),1);
-f1 = figure;
-h = zeros(1,6);
-h(1)= plot(I1w3,X3(:,1),'b.','DisplayName', 'data');
+f3p4.I1w = f3p4.X1 / Re0;
+f15.I1w = f15.X1 / Re0;
+f30.I1w = f30.X1 / Re0;
+f50.I1w = f50.X1 / Re0;
+
+% f3p4.X3_pure = f3p4.X3 - f3p4.X3_ref;
+% f15.X3_pure = f15.X3 - f15.X3_ref;
+% f30.X3_pure = f30.X3 - f30.X3_ref;
+% f50.X3_pure = f50.X3 - f50.X3_ref;
+% 
+% f3p4.Y3_pure = f3p4.Y3 - f3p4.Y3_ref;
+% f15.Y3_pure = f15.Y3 - f15.Y3_ref;
+% f30.Y3_pure = f30.Y3 - f30.Y3_ref;
+% f50.Y3_pure = f50.Y3 - f50.Y3_ref;
+
+f = table(f3p4,f15,f30,f50);
+f6 = figure;
+colors = ['b','g','r','c'];
+p = zeros(4,2);
 hold on
-h(2)= plot(I1w3,X3(:,2),'b.','DisplayName', 'data');
-h(3)= plot(I1w3,X3(:,3),'b.','DisplayName', 'data');
-x = [0;I1w3];
-h(4)= plot(x, p1(1) * x + p1(2),'b', 'DisplayName', 'f1 = 10Hz');
-h(5)= plot(x, p2(1) * x + p2(2),'r', 'DisplayName', 'f2 = 37.6Hz');
-h(6)= plot(x, p3(1) * x + p3(2),'g', 'DisplayName', 'f3 = 108.5Hz');
+p(1,:) = polyfit(f{:,1}.I1w(5:end-2).^3,f{:,1}.X3(5:end-2),1);
+x = [0; f{:,1}.I1w(5:end-2).^3];
+h(1) = scatter(f{:,1}.I1w(5:end-2).^3,f{:,1}.X3(5:end-2), 'MarkerEdgeColor', colors(1), ...
+    'DisplayName', sprintf('f = %0.1fHz',freqs(1)));
+h(5) = plot(x, polyval(p(1,:),x), 'Color', colors(1));
+str = sprintf(' X3 = (%0.3e) * I1w^3 + (%0.3e)', p(1,:));
+text(1.5e-8, -10e-6, str)
+for i = 2:width(f)
+    p(i,:) = polyfit(f{:,i}.I1w(5:end-2).^3,f{:,i}.X3(5:end-2),1);
+    h(i) = scatter(f{:,i}.I1w(5:end-2).^3,f{:,i}.X3(5:end-2), 'MarkerEdgeColor', colors(i), ...
+    'DisplayName', sprintf('f = %0.1fHz',freqs(i)));
+    x = [0; f{:,i}.I1w(5:end-2).^3];
+    h(4 + i) = plot(x, polyval(p(i,:),x), 'Color', colors(i));
+    str = sprintf(' X3 = (%0.3e) * I1w^3 + (%0.3e)', p(i,:));
+    text(1.5e-8, (-12 + i * 2) * 1e-6, str)
+end
 hold off
-legend(h(4:6))
-xlim([0,5e-8])
-str = sprintf(' X3_1 = (%0.3e) * I1w^3 + (%0.3e)', p1(:));
-text(1.5e-8, -4e-5, str)
-str = sprintf(' X3_2 = (%0.3e) * I1w^3 + (%0.3e)', p2(:));
-text(1.5e-8, -3e-5, str)
-str = sprintf(' X3_3 = (%0.3e) * I1w^3 + (%0.3e)', p3(:));
-text(1.5e-8, -2.5e-5, str)
-xlabel('I1w^3(A^3)')
-ylabel('X3(V)')
-saveas(f1,['200407\', Rname,'_3w_power_dep_in_a_shell.jpg'])
+legend(h([1,2,3,4]))
+xlabel('I_{1w}^3(A)')
+ylabel('V3w(V)')
+title([Rname, ' I_{1w}^3 vs. V_{3w}'])
+text(2e-8,-12e-6, 'X3')
+%saveas(f6, [fsave, Rname, '_I_1w_vs_X3.jpg'])
+
+offset =  mean(p(:,2)); %1.2724e-6
