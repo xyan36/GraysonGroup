@@ -50,18 +50,19 @@ r = 0.5772;
 %                'Upper',[10,10,10],...
 %                'StartPoint',[1,1,1]);
 
-p = polyfit(log(data.Lockin1f),data.T_avg,1);
+%p = polyfit(log(data.Lockin1f),data.T_avg,1);
 % plot(log(data.Lockin1f),data.T_avg,'b.')
 % hold on
 % plot(log(data.Lockin1f),polyval(p,log(data.Lockin1f)))
 % hold off
-detk = (1 / (pi * -2 * p(1)))^2;
+%detk = (1 / (pi * -2 * p(1)))^2;
 
-ft = fittype( 'anisotropicT3w(x,detk,p0)', 'problem','detk');
-%ft = fittype('anisotropicT3w(x,ampl,p0)');
-f = fit( data.Lockin1f, data.T_avg, ft, 'problem', detk, 'StartPoint', [1]);
-%f = fit( data.Lockin1f, data.T_avg, ft, 'StartPoint', [1,1]);
+%ft = fittype( 'anisotropicT3w(x,detk,p0)', 'problem','detk');
+ft = fittype('anisotropicT3w(x,detk,p0)');
+%f = fit( data.Lockin1f, data.T_avg, ft, 'problem', detk, 'StartPoint', [1]);
+f = fit( data.Lockin1f, data.T_avg, ft, 'StartPoint', [1,1]);
 p0 = f.p0;
+detk = f.detk;
 confintf = confint(f);
 % f1 = figure;
 % plot(f, data.Lockin1f, data.T_avg)
@@ -69,7 +70,7 @@ confintf = confint(f);
 % ax.XScale = 'log';
 % ax.XLabel.String = 'f(Hz)';
 % ax.YLabel.String = 'T3w(K)';
-fparam = p0;
+fparam = [f.detk,f.p0];
 result = [fparam; confintf];
 % str = sprintf('Coefficients (with 95%% confidence bounds):\np0 = %0.3f, (%0.3f, %0.3f)', result(:));
 % text(100, -0.05, str)
@@ -85,12 +86,12 @@ plot(log(data.Lockin1f), anisotropicT3w(data.Lockin1f, detk, f.p0), 'r', 'lineWi
 plot(log(data.Lockin1f), anisotropicT3w(data.Lockin1f, detk, 1/sqrt(detk)),'g', 'LineWidth', 1, ...
     'DisplayName', 'expected with kxx=kyy=sqrt(detk)')
 hold off
-str = sprintf('kxx / detk = %0.3e, (%0.3e, %0.3e)', result(:));
+str = sprintf('kxx / detk = %0.3f, (%0.3f, %0.3f)', result(:,2));
 text(2, 0.5, str)
-str = sprintf('detk = %0.3f', detk);
+str = sprintf('detk = %0.3f, (%0.3f, %0.3f)', result(:,1));
 text(2, 0.55, str)
 legend('show')
 xlabel('ln(f)')
 ylabel('T(K)')
 title([Rname, ' 3w slope and magnitude analysis'])
-%saveas(f2,[fname(1:end-4),'_T3w_slope_mag.jpg'])
+saveas(f2,[fname(1:end-4),'_T3w_slope_real_corrected.jpg'])
