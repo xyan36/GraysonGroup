@@ -6,7 +6,8 @@ Created on Wed Jun 10 12:23:39 2020
 """
 import numpy as np
 import matplotlib.pyplot as plt
-import os
+import pandas as pd
+
 ## Temperature coefficient of resistance alpha:
 alpha = 0.005 #/K
 ## Sample resistance of room temperature Re0:
@@ -49,16 +50,23 @@ def V3w_imag(freqs):
     * (w1 * tau / 5) / (1 + (w1 * tau / 5)**2)
     return V3wimag
 
-X1 = V3w_real(freqs)
-Y1 = V3w_imag(freqs)
+X3 = V3w_real(freqs)
+Y3 = V3w_imag(freqs)
 fig, axs =  plt.subplots(1,2, figsize = (12,6))
-axs[0].plot(freqs, X1, label = 'X1') 
+axs[0].plot(freqs, X3, label = 'X3') 
 axs[0].set_xlabel('f(Hz)')
 axs[0].set_ylabel('V3w(V)')
 axs[0].legend()
-axs[1].plot(freqs, Y1, label = 'Y1')  
+axs[1].plot(freqs, Y3, label = 'Y3')  
 axs[1].set_xlabel('f(Hz)')
 axs[1].set_ylabel('V3w(V)')
 axs[1].legend()
 plt.tight_layout()
+#fig.savefig('name.jpg', dpi = 300)
+
+result = pd.DataFrame({'f(Hz)' : freqs, 'X3(V)' : X3, 'Y3(V)' : Y3})
+result.to_csv('3w_simulation_data.csv', index = False)
+
+
+
 
