@@ -52,6 +52,24 @@ def lockin_set_pms(timeCon,sensitivity):
     #sensitivity
     lockin1.write("SENS %d" %sensitivity)
     lockin2.write("SENS %d" %sensitivity)
+    
+def lockinsingle_set_pms(lockin, timeCon, sensitivity):
+    #time constant
+    lockin.write("OFLT %d" %timeCon)
+    #sensitivity
+    lockin.write("SENS %d" %sensitivity)
+    
+def outputs_query():
+    X3 = lockin1.query('outp?1').rstrip()
+    Y3 = lockin1.query('outp?2').rstrip()
+    X1_ref = lockin2.query('outp?1').rstrip()
+    Y1_ref = lockin2.query('outp?2').rstrip()
+    header = "X3 Y3 X1_ref Y1_ref\n"
+    print(header)
+    print(X3, Y3, X1_ref, Y1_ref, sep = " ")
+def set_V_input(lockin, voltage):
+    lockin.write('slvl %f' %voltage)
+    print(datetime.now())
 
 ### measurements ###
 def measurement(sens,initWaitTime): #sens= allowed error in reading
