@@ -2,8 +2,8 @@
     %[2015] axes notation
 %define k matrix and other parameters
 %fname = '200228\200228_glass_R78_R1516_2w_measurement_5.csv';
-fname = '200302\200302_glass_R65_R1817_2w_measurement_1.csv';
-%fname = '200303\200303_glass_R43_R2019_2w_measurement_1.csv';
+%fname = '200302\200302_glass_R65_R1817_2w_measurement_1.csv';
+fname = '200303\200303_glass_R43_R2019_2w_measurement_1.csv';
 data = readtable(fname);
 switch fname
     case '200228\200228_glass_R78_R1516_2w_measurement_5.csv'
@@ -56,16 +56,16 @@ for i = 1 : 1 : length(gamma2s)
     Gofs{i} = gof;
 end
     
-f2 = figure;
 sdetks = zeros(1, length(gamma2s));
 p0s = zeros(1, length(gamma2s));
 for i = 1 : 1 : length(gamma2s)
     sdetks(i) = Fits{i}.sdetk;
     p0s(i) = Fits{i}.p0;
 end
-plot(gamma2s, sdetks, 'DisplayName', 'sdetk')
+f2 = figure;
+plot(gamma2s, sdetks, 'DisplayName', 'sdetk');
 hold on
-plot(gamma2s, p0s, 'DisplayName', 'p0')
+plot(gamma2s, p0s, 'DisplayName', 'p0');
 hold off
 legend('show')
 ax = gca;
