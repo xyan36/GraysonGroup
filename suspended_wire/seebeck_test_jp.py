@@ -25,39 +25,17 @@ rm.list_resources()
 rtdl = rm.open_resource('GPIB2::1::INSTR')
 rtdr = rm.open_resource('GPIB2::2::INSTR')
 samp = rm.open_resource('GPIB2::15::INSTR')
-#fg = rm.open_resource('GPIB0::11::INSTR')
-def init():
-    #mm1.write("*RST");
-    #mm1.write("SYST:BEEP:STAT OFF")
-    rtdl.write(":SENS:FUNC 'RES'")
-    rtdr.write(":SENS:FUNC 'RES'")
-    #samp.write(":SENS:FUNC 'FRES'")
-date = '200623'
+
+date = '200708'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass
-TESTNAME = "200623//200623_Bi2Te30617_seebeck_2.txt"
-#FILENAME = TESTNAME + '_' + str(dt.datetime.now()).replace(':','-') + ".txt"
-#output = open(TESTNAME,"w");
+TESTNAME = f"{date}//{date}_Bi2Te3_p2_seebeck_2.txt"
 with open(TESTNAME, "w") as output:
     output.write("Date Time RTDl RTDr Vsamp\n")
 
-#init();
-##use fg to give a 5V DC heating
-#fg.write("FUNC 0")
-#fg.write('ampl0vr')
-#fg.write('offs 5')
-#fg.write("OUTE1") # fg output on
-
 ti = dt.datetime.now()
-
-#constants
-#samp.write('SLVL2.276')
-#V = 2.276 #lockin voltage
-#Rref = 310.9e3 #large resistor to convert to current source
-#I = V/Rref
-
 try:
     while True:
         ans1 = float( rtdl.query(":sens:data:fres?"))
