@@ -110,12 +110,12 @@ def VoltageSweep(voltages,sens1, TC1, SENS1, initWaitTime1, sens3, TC3, SENS3, i
  ##############################################################################
 
 ### crate a folder with today's date and create a new file name ###
-date = '200624'
+date = '200811'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass
-FILENAME = f"{date}//{date}_Bi2Te30617_power_dep_f3p4.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_p2_new_power_dep_f3p4.txt"
 
 rm = visa.ResourceManager();
 print(rm.list_resources())
@@ -129,7 +129,7 @@ with open(FILENAME,'w') as output:
 
 ### Set the parameters ###
 freq = 3.4 #Hz
-voltages = np.array([0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3])
+voltages = np.array([0.5, 1.1, 1.3, 1.5, 1.7, 2, 2.5, 3, 3.5])
 sens1 = 1e-3#allowed error for 1w
 timeCon1 = 13#time const for 1w measurement
 sensitivity1 = 24#sensitivity for 1w measurement

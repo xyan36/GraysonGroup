@@ -103,29 +103,30 @@ def VoltageSweep(voltages,sens1, TC1, SENS1, initWaitTime1, sens3, TC3, SENS3, i
  ##############################################################################
 
 ### crate a folder with today's date and create a new file name ###
-date = '200708'
+date = '200811'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass
-FILENAME = f"{date}//{date}_Bi2Te3_p2_power_dep_f3p4.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_p2_new_power_dep_f3p4_1.txt"
 
 rm = visa.ResourceManager();
 print(rm.list_resources())
 lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample & SINE_OUT source
 lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
 
-header = "Date time Time V_input X3 Y3 X1_ref Y1_ref\n"
-#with open(FILENAME,'w') as output:
-#    output.write(header)
+header = "Date time Time V_input TC SENS_X3 SENS_X1 X3 Y3 X1_ref Y1_ref\n"
+print(header)
+with open(FILENAME,'w') as output:
+    output.write(header)
 
 ### Set the parameters ###
 freq = 3.4 #Hz
 timeCon = 14#100s
-voltages = np.array([4, 4.5, 5])
+voltages = np.array([0.5, 1.1, 1.3, 1.5, 1.7, 2, 2.5, 3, 3.5])
 sensitivity1 = 22#50mV  sensitivity for 1w measurement
 sensitivity3 = 12#20uV  sensitivity for 3w measurement
-initWaitTime = 15 * 60#s
+initWaitTime = 12 * 60#s
 lockin1.write('harm 3')
 lockin2.write('harm 1')
 ##########################
@@ -136,9 +137,24 @@ lockinsingle_set_pms(lockin1, timeCon, sensitivity3)
 lockinsingle_set_pms(lockin2, timeCon, sensitivity1)
 try:
     for v in voltages:
-        set_V_input(lockin1, v)
+        lockin1.write('slvl %f' %v)
         time.sleep(initWaitTime)
-        outputs_query()
+        
+        dt = str(datetime.now())
+        t = round(float(time.time()-t0), 4)
+        vin = str(v)
+        tc = lockin1.query('oflt?').rstrip()
+        sens_x3 = lockin1.query('sens?').rstrip()
+        sens_x1 = lockin2.query('sens?').rstrip()
+        X3 = lockin1.query('outp?1').rstrip()
+        Y3 = lockin1.query('outp?2').rstrip()
+        X1_ref = lockin2.query('outp?1').rstrip()
+        Y1_ref = lockin2.query('outp?2').rstrip()
+        
+        line = f"{dt} {t} {vin} {tc} {sens_x3} {sens_x1} {X3} {Y3} {X1_ref} {Y1_ref}"
+        print(line)
+        with open(FILENAME,'a') as output:
+            output.write(line +"\n")
 except KeyboardInterrupt:
     print('keyboardinteeruupt')
     pass
