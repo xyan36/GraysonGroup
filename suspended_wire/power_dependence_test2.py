@@ -41,13 +41,18 @@ def lockinsingle_set_pms(lockin, timeCon, sensitivity):
     lockin.write("SENS %d" %sensitivity)
     
 def outputs_query():
+    v = lockin1.query('slvl?').rstrip()
+    tc = lockin1.query('oflt?').rstrip()
+    s_x3 = lockin1.query('sens?').rstrip()
+    s_x1 = lockin2.query('sens?').rstrip()
     X3 = lockin1.query('outp?1').rstrip()
     Y3 = lockin1.query('outp?2').rstrip()
     X1_ref = lockin2.query('outp?1').rstrip()
     Y1_ref = lockin2.query('outp?2').rstrip()
-    header = "X3 Y3 X1_ref Y1_ref"
+    header = "V_input TC SENS_X3 SENS_X1 X3 Y3 X1_ref Y1_ref"
     print(header)
-    print(X3, Y3, X1_ref, Y1_ref, sep = "\t")
+    print(v, tc, s_x3, s_x1, X3, Y3, X1_ref, Y1_ref, sep = " ")
+    
 def settings_query():
     f1 = lockin1.query('freq?').rstrip()
     f2 = lockin2.query('freq?').rstrip()
@@ -100,15 +105,92 @@ def VoltageSweep(voltages,sens1, TC1, SENS1, initWaitTime1, sens3, TC3, SENS3, i
         print(str(datetime.now()) + " " + str(t) + " " + line)
         with open(FILENAME,'a') as output:
             output.write(str(datetime.now()) + " " + str(t) + " " + line +"\n")
- ##############################################################################
+ 
+def voltage_sweep_auto(voltages, initWaitTime):
+    try:
+        for v in voltages:
+            lockin1.write('slvl %f' %v)
+            time.sleep(initWaitTime)
+            
+            dt = str(datetime.now())
+            t = round(float(time.time()-t0), 4)
+            vin = str(v)
+            tc = lockin1.query('oflt?').rstrip()
+            sens_x3 = lockin1.query('sens?').rstrip()
+            sens_x1 = lockin2.query('sens?').rstrip()
+            X3 = lockin1.query('outp?1').rstrip()
+            Y3 = lockin1.query('outp?2').rstrip()
+            X1_ref = lockin2.query('outp?1').rstrip()
+            Y1_ref = lockin2.query('outp?2').rstrip()
+            
+            line = f"{dt} {t} {vin} {tc} {sens_x3} {sens_x1} {X3} {Y3} {X1_ref} {Y1_ref}"
+            print(line)
+            with open(FILENAME,'a') as output:
+                output.write(line +"\n")
+    except KeyboardInterrupt:
+        print('keyboardinteeruupt')
+        pass
+    finally:
+        lockin1.write("SLVL %f" %0.004)
+        #output.close()# may record unfinished data
+        tf = datetime.now()
+        print ("Program done! total time is: "+ str(tf-ti))
+
+def voltage_sweep_manual(voltages, initWaitTime):
+    try:
+        for v in voltages:
+            lockin1.write('slvl %f' %v)
+            time.sleep(initWaitTime)
+            
+            dt = str(datetime.now())
+            t = round(float(time.time()-t0), 4)
+            vin = str(v)
+            tc = lockin1.query('oflt?').rstrip()
+            sens_x3 = lockin1.query('sens?').rstrip()
+            sens_x1 = lockin2.query('sens?').rstrip()
+            X3 = lockin1.query('outp?1').rstrip()
+            Y3 = lockin1.query('outp?2').rstrip()
+            X1_ref = lockin2.query('outp?1').rstrip()
+            Y1_ref = lockin2.query('outp?2').rstrip()
+            line = f"{dt} {t} {vin} {tc} {sens_x3} {sens_x1} {X3} {Y3} {X1_ref} {Y1_ref}"
+            print(line)
+            
+            usercheck = input('Is reading stable? Type \'y\' to record: ')
+            while usercheck != 'y':
+                print('Not recorded.')
+                usercheck = input('Is reading stable? Type \'y\' to record: ')
+            dt = str(datetime.now())
+            t = round(float(time.time()-t0), 4)
+            vin = str(v)
+            tc = lockin1.query('oflt?').rstrip()
+            sens_x3 = lockin1.query('sens?').rstrip()
+            sens_x1 = lockin2.query('sens?').rstrip()
+            X3 = lockin1.query('outp?1').rstrip()
+            Y3 = lockin1.query('outp?2').rstrip()
+            X1_ref = lockin2.query('outp?1').rstrip()
+            Y1_ref = lockin2.query('outp?2').rstrip()
+            line = f"{dt} {t} {vin} {tc} {sens_x3} {sens_x1} {X3} {Y3} {X1_ref} {Y1_ref}"
+            print(line)
+            with open(FILENAME,'a') as output:
+                output.write(line +"\n")
+            print('Recorded.')
+    except KeyboardInterrupt:
+        print('keyboardinteeruupt')
+        pass
+    finally:
+        lockin1.write("SLVL %f" %0.004)
+        #output.close()# may record unfinished data
+        tf = datetime.now()
+        print ("Program done! total time is: "+ str(tf-ti))
+    ##############################################################################
 
 ### crate a folder with today's date and create a new file name ###
-date = '200818'
+date = '200821'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass
-FILENAME = f"{date}//{date}_Bi2Te3_n2_power_dep_f3p4_2.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_n2_power_dep_f3p4_4.txt"
 
 rm = visa.ResourceManager();
 print(rm.list_resources())
@@ -122,11 +204,11 @@ with open(FILENAME,'w') as output:
 
 ### Set the parameters ###
 freq = 3.4 #Hz
-timeCon = 14#100s
-voltages = np.array([0.5, 0.8, 1.1, 1.5, 1.7, 2])
-sensitivity1 = 22#50mV  sensitivity for 1w measurement
-sensitivity3 = 11#10uV  sensitivity for 3w measurement
-initWaitTime = 12 * 60#s
+timeCon = 14 #100s
+voltages = np.array([1.3, 1.1, 0.9, 0.7, 0.5])
+sensitivity1 = 24#50mV  sensitivity for 1w measurement
+sensitivity3 = 15#200uV  sensitivity for 3w measurement
+initWaitTime = 15 * 60#s
 lockin1.write('harm 3')
 lockin2.write('harm 1')
 ##########################
@@ -135,30 +217,5 @@ t0 = time.time()
 ti = datetime.now()
 lockinsingle_set_pms(lockin1, timeCon, sensitivity3)
 lockinsingle_set_pms(lockin2, timeCon, sensitivity1)
-try:
-    for v in voltages:
-        lockin1.write('slvl %f' %v)
-        time.sleep(initWaitTime)
-        
-        dt = str(datetime.now())
-        t = round(float(time.time()-t0), 4)
-        vin = str(v)
-        tc = lockin1.query('oflt?').rstrip()
-        sens_x3 = lockin1.query('sens?').rstrip()
-        sens_x1 = lockin2.query('sens?').rstrip()
-        X3 = lockin1.query('outp?1').rstrip()
-        Y3 = lockin1.query('outp?2').rstrip()
-        X1_ref = lockin2.query('outp?1').rstrip()
-        Y1_ref = lockin2.query('outp?2').rstrip()
-        
-        line = f"{dt} {t} {vin} {tc} {sens_x3} {sens_x1} {X3} {Y3} {X1_ref} {Y1_ref}"
-        print(line)
-        with open(FILENAME,'a') as output:
-            output.write(line +"\n")
-except KeyboardInterrupt:
-    print('keyboardinteeruupt')
-    pass
-lockin1.write("SLVL %f" %0.004)
-#output.close()# may record unfinished data
-tf = datetime.now()
-print ("Program done! total time is: "+ str(tf-ti))
+
+voltage_sweep_manual(voltages, initWaitTime)
