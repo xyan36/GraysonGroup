@@ -23,12 +23,12 @@ print(rm.list_resources())
 lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample
 lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
 ### output file initialize ###
-date = '200709'
+date = '200822'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = f"{date}//{date}_Bi2Te3_p2_3w_2.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_n2_3w.txt"
 t0 = time.time()
 ti = datetime.now()
 header = "Date_time Time TC SENS Lockin1f Lockin2f X3 Y3 X3_ref Y3_ref\n"
@@ -161,7 +161,7 @@ def freqSweepSingle(start, sens,initWaitTime):
 
 ##3w measurement
 lockinInit_3w()
-lockin1.write("SLVL 3")
+lockin1.write("SLVL 0.7")
 
 ###freq sweep 0.001-0.01Hz
 ##timeCon = 17#
@@ -172,45 +172,45 @@ lockin1.write("SLVL 3")
 ##freqSweep(0.1,sens,waitTime)
 #
 ##freq sweep 0.01-0.1Hz
-#timeCon = 15#
-#sensitivity = 14# 18 FOR 2V; 14#100 UV;
-#lockin_set_pms(timeCon,sensitivity)
-#sens = 1e-7
-#waitTime = 30*60#s
-#freqSweep(0.01,sens,waitTime)
+timeCon = 15#
+sensitivity = 14# 18 FOR 2V; 14#100 UV;
+lockin_set_pms(timeCon,sensitivity)
+sens = 1e-7
+waitTime = 30*60#s
+freqSweep(0.01,sens,waitTime)
 #
 ###freq sweep 0.1-1Hz
-#timeCon = 13#
-#sensitivity = 14# 18 FOR 2V; 14#100 UV;
-#lockin_set_pms(timeCon,sensitivity)
-#sens = 1e-7
-#waitTime = 10*60#s
-#freqSweep(0.1,sens,waitTime)
+timeCon = 13#
+sensitivity = 14# 18 FOR 2V; 14#100 UV;
+lockin_set_pms(timeCon,sensitivity)
+sens = 1e-7
+waitTime = 20*60#s
+freqSweep(0.1,sens,waitTime)
 #
 ###freq sweep 1-10Hz
-#timeCon =  12#
-#sensitivity = 12#2mV
-#lockin_set_pms(timeCon,sensitivity)
-#sens = 1e-7#0.1e-3V
-#waitTime = 5*60#s
-#freqSweep(1,sens,waitTime)
+timeCon =  12#
+sensitivity = 14#2mV
+lockin_set_pms(timeCon,sensitivity)
+sens = 1e-7#0.1e-3V
+waitTime = 15*60#s
+freqSweep(1,sens,waitTime)
 ##
 ##freq sweep 10-100Hz
 timeCon = 11#
-sensitivity = 12#500uV
+sensitivity = 14#500uV
 lockin_set_pms(timeCon,sensitivity)
 sens = 1e-7#0.01e-3#V
-waitTime = 5*60#s
+waitTime = 10*60#s
 freqSweep(10,sens,waitTime)
 
 #freq sweep 100-1000Hz
-timeCon = 11#
-sensitivity = 12# 500 uV
-lockin_set_pms(timeCon, sensitivity)
-#lockinsingle_set_pms(lockin2, timeCon, 25)
-sens = 1e-7#0.001e-3#V
-waitTime = 5*60#s
-freqSweep(100,sens,waitTime)
+#timeCon = 11#
+#sensitivity = 12# 500 uV
+#lockin_set_pms(timeCon, sensitivity)
+##lockinsingle_set_pms(lockin2, timeCon, 25)
+#sens = 1e-7#0.001e-3#V
+#waitTime = 5*60#s
+#freqSweep(100,sens,waitTime)
 #
 ##freq sweep 1000-10000Hz
 #timeCon = 7#0.3s

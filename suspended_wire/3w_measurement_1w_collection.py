@@ -112,12 +112,12 @@ def freqSweepSingle(start, sens,initWaitTime):
 
 ###1w  measurement ###
 ### basic parameters ###
-date = '200625'
+date = '200822'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = date + '//' + date + '_' +"Bi2Te30617_3w_1_1w_collection.txt"
+FILENAME = date + '//' + date + '_' +"Bi2Te3_n2_3w_1_1w_collection.txt"
 header = "Date_time Time TC SENS Lockin1f Lockin2f X1 Y1 X1_ref Y1_ref\n"
 rm = visa.ResourceManager();
 print(rm.list_resources())
@@ -126,12 +126,12 @@ lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
 lockin1.write("*cls")
 lockin2.write("*cls")
 t0 = time.time()
-Vs = 1.1 #source voltage
+Vs = 0.7 #source voltage
 freq = 17
 sens = 0.001e-3 #allowed error in data
 timeCon = 9
 sensitivity = 24
-initWaitime = 30
+initWaitime = 5 * 60
 
 #lockinInit_1w()
 lockin1.write("HARM 1")
