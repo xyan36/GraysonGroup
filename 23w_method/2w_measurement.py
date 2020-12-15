@@ -18,21 +18,21 @@ import visa
 import numpy as np
 import os
 ### basic parameters ###
-date = '200303'
+date = '201215'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
 
-FILENAME = date + '//' + date + '_' +"glass_R43_R2019_2w_measurement_1.txt"
+FILENAME = date + '//' + date + '_' +"glass_R87_R1516_2w_measurement.txt"
 
 rm = visa.ResourceManager();
 print(rm.list_resources())
 #fg = rm.open_resource("GPIB::11::INSTR")
-lockin1 = rm.open_resource("GPIB2::9::INSTR") #heater SINE OUT, therm 2w
-lockin2 = rm.open_resource("GPIB2::18::INSTR") #heater 1w
-lockin1.write("*cls")
-lockin2.write("*cls")
+lockin1 = rm.open_resource("GPIB2::9::INSTR") #heater SINE OUT
+lockin2 = rm.open_resource("GPIB2::18::INSTR") #2w
+#lockin1.write("*cls")
+#lockin2.write("*cls")
 #mm1 = rm.open_resource("GPIB::2::INSTR")
 #lockin1.timeout = 25000
 #lockin2.timeout = 25000
@@ -216,8 +216,8 @@ def freqSweepSingle(start, sens,initWaitTime):
       
         
 ##initialize lockin1 to 1w for heater, lockin2 to 2w for thermometer
-lockinInit_harmonics(lockin1, 2)
-lockinInit_harmonics(lockin2, 1)
+lockinInit_harmonics(lockin1, 1)
+lockinInit_harmonics(lockin2, 2)
 #Turn on DC power for thermometer (10V)
 lockin1.write("SLVL 5")
 
@@ -257,17 +257,16 @@ try:
     ##freqSweep(20,sens,waitTime)
     #freqSweep_range(1,10,1,sens,waitTime)
     
-    #freq sweep 20-200Hz
+
     timeCon = 11#
     sensitivity1 = 16#500uV
     sensitivity2 = 26#500uV
     sens = 1e-7#for 2w
-    waitTime = 1*60#s
+    waitTime = 2*60#s
     lockinsingle_set_pms(lockin1, timeCon,sensitivity1)
     lockinsingle_set_pms(lockin2, timeCon,sensitivity2)
     #freqSweep(20,sens,waitTime)
-    freqSweep_log(10,2000,30,sens,waitTime)
-    
+    freqSweep_log(10,2000,30,sens,waitTime) 
     
 #    #freq sweep 200-2000Hz
 #    timeCon = 10#
