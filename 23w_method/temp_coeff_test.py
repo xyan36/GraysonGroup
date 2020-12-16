@@ -15,7 +15,7 @@ import os
 
 rm = visa.ResourceManager()
 rm.list_resources()
-rtdl = rm.open_resource('GPIB2::2::INSTR')
+rtdl = rm.open_resource('GPIB2::1::INSTR')
 #rtdr = rm.open_resource('GPIB2::1::INSTR')
 samp = rm.open_resource('GPIB2::15::INSTR')
 #fg = rm.open_resource('GPIB0::11::INSTR')
@@ -26,16 +26,16 @@ def init():
 #    rtdr.write(":SENS:FUNC 'RES'")
     #samp.write(":SENS:FUNC 'FRES'")
 ### basic parameters ###
-date = '200226'
+date = '201216'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
 
-FILENAME = date + '//' + date + '_' +"glass_R78_temp_coeff_DMM_1.txt"
+FILENAME = date + '//' + date + '_' +"glass_R78_temp_coeff_DMM.txt"
 
 #output = open(FILENAME,"w");
-with open(FILENAME, "a") as output:
+with open(FILENAME, "w") as output:
     output.write("Date_Time,RTD,Rsamp\n")
 
 #init();
