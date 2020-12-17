@@ -56,4 +56,29 @@ axs[1].set_ylabel('V1w(V)')
 axs[1].legend(loc = 'upper right')
 
 plt.tight_layout()
+
 #plt.savefig(fname[:len(fname)-4] + "_phase_-90", dpi = 300)
+
+
+fig2, axs = plt.subplots(1,2, figsize = (14,6))
+fz = 24
+axs[0].scatter(graph_data.Lockin1f, graph_data.X2, label = 'X2')
+axs[0].scatter(graph_data.Lockin2f, graph_data.Y2, label = 'Y2')
+axs[0].set_xlabel('f(Hz)', fontsize = fz)
+axs[0].set_ylabel('V(V)', fontsize = fz)
+axs[0].set_xscale('log')
+axs[0].set_ylim([-300e-6, 300e-6])
+axs[0].tick_params(labelsize = 20)
+axs[0].legend(loc = 'upper right', fontsize = 20)
+
+axs[1].scatter(graph_data.Lockin1f, R * np.cos(theta2  - 90 / 180 * np.pi), label = 'converted X2')
+axs[1].scatter(graph_data.Lockin2f, R * np.sin(theta2  - 90 / 180 * np.pi), label = 'converted Y2')
+axs[1].set_xlabel('f(Hz)', fontsize = fz)
+axs[1].set_ylabel('V(V)', fontsize = fz)
+axs[1].set_xscale('log')
+axs[1].set_ylim([-300e-6, 300e-6])
+axs[1].tick_params(labelsize = 20)
+axs[1].legend(loc = 'upper right', fontsize = 20)
+
+plt.tight_layout()
+fig2.savefig(fname[:len(fname)-4] + 'converted.png', dpi = 100)
