@@ -18,13 +18,13 @@ import visa
 import numpy as np
 import os
 ### basic parameters ###
-date = '201215'
+date = '201218'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
 
-FILENAME = date + '//' + date + '_' +"glass_R87_R1516_2w_measurement.txt"
+FILENAME = date + '//' + date + '_' +"glass_R87_R1516_2w_measurement_dry_ice.txt"
 
 rm = visa.ResourceManager();
 print(rm.list_resources())
@@ -42,7 +42,7 @@ lockin2 = rm.open_resource("GPIB2::18::INSTR") #2w
 #output = open(FILENAME,'w')
 t0 = time.time()
 ti = datetime.now()
-header = "Date_time Time TC SENS Lockin1f Lockin2f X2 Y2 X1 Y1\n"
+header = "Date_time Time TC SENS Lockin1f Lockin2f X1 Y1 X2 Y2\n"
 with open(FILENAME, 'w') as output:
     output.write(header)
 
@@ -259,8 +259,8 @@ try:
     
 
     timeCon = 11#
-    sensitivity1 = 16#500uV
-    sensitivity2 = 26#500uV
+    sensitivity1 = 26#500uV
+    sensitivity2 = 16#500uV
     sens = 1e-7#for 2w
     waitTime = 2*60#s
     lockinsingle_set_pms(lockin1, timeCon,sensitivity1)
@@ -305,9 +305,7 @@ except KeyboardInterrupt:
 finally:
     lockin1.write('freq 17')
     lockin1.write("SLVL 0.004")
-    #lockinInit_1w()
-    #fg.write("OUTE0") #fg output off
-    #C
     output.close()# may record unfinished data
     tf = datetime.now()
     print ("Program done! total time is: "+ str(tf-ti))
+    #Turn off DC supply (10V --> 0)

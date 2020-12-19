@@ -26,13 +26,13 @@ def init():
 #    rtdr.write(":SENS:FUNC 'RES'")
     #samp.write(":SENS:FUNC 'FRES'")
 ### basic parameters ###
-date = '201216'
+date = '201218'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
 
-FILENAME = date + '//' + date + '_' +"glass_R78_temp_coeff_DMM.txt"
+FILENAME = date + '//' + date + '_' +"glass_R78_temp_coeff_DMM_dry_ice_2_heating_up.txt"
 
 #output = open(FILENAME,"w");
 with open(FILENAME, "w") as output:
