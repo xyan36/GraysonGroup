@@ -15,17 +15,18 @@ import os
 
 rm = visa.ResourceManager()
 rm.list_resources()
-rtdl = rm.open_resource('GPIB2::2::INSTR')
-rtdr = rm.open_resource('GPIB2::15::INSTR')
-samp = rm.open_resource('GPIB2::1::INSTR')  
+s1 = rm.open_resource('GPIB2::1::INSTR')
+s2 = rm.open_resource('GPIB2::15::INSTR')
+s3 = rm.open_resource('GPIB2::2::INSTR')
+s4 = rm.open_resource('GPIB2::16::INSTR')  
 
-date = '210210'
+date = '210222'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = date + '//' + date + '_' +"Bi2Te3_p4_contact_test3.txt"
-header = "Date Time,R_GaSn,R_coldIn,R_HotIn\n"
+FILENAME = date + '//' + date + '_' +"Bi2Te3_n4_contact_test2.txt"
+header = "Date Time,R_hotIn,R_coldIn,R_GaSn,R_Cerrotru\n"
 with open(FILENAME, "w") as output:
     output.write(header)
 print(header)
@@ -33,16 +34,19 @@ print(header)
 ti = dt.datetime.now()
 try:
     while True:
-        ans1 = float( rtdl.query(":sens:data:fres?"))
-        ans2 = float( rtdr.query(":sens:data:fres?"))
-        ans3 = float(samp.query("sens:data:fres?"))
+        ans1 = float( s1.query(":sens:data:fres?"))
+        ans2 = float( s2.query(":sens:data:fres?"))
+        ans3 = float(s3.query("sens:data:fres?"))
+        ans4 = float(s4.query("sens:data:fres?"))
         line = str(dt.datetime.now()) + "," \
                      + str(ans1) + ","  \
                      + str(ans2) +  ","  \
-                     + str(ans3)
+                     + str(ans3)+  ","  \
+                     + str(ans4)
         with open(FILENAME, "a") as output:             
             output.write(line + "\n")
         print(line)
+        time.sleep(10)
 except KeyboardInterrupt:  
     pass
 finally:
