@@ -22,8 +22,8 @@ interval = 1000
 
 #fnames = ['results/GaGdN-300K-190809_001.dat',
 #          'results/GaGdN-300K-190809_002.dat']
-date = '210222'
-fname =  date + '//' + date + '_' +"Bi2Te3_n4_contact_test2.txt"
+date = '210304'
+fname =  date + '//' + date + '_' +"Bi2Te3_p5_contact_test4.txt"
 #Rref = 12.64
 
 #x_column = 'B_digital'
@@ -47,31 +47,31 @@ def animate_multi(i, axs, fname, color=None):
     for ax in axs:
         ax.clear()
     graph_data = pd.read_csv(fname, sep = ',', header = 0)
-    graph_data['Time'] = pd.to_datetime(graph_data['Date Time'])
+    graph_data['Time'] = pd.to_datetime(graph_data['Date_Time'])
     graph_data['TimeDur'] = graph_data['Time'] - graph_data['Time'][0]
 #    graph_data['Tl'] = 9.91684E-6*graph_data['RTDl']**2+0.23605*graph_data['RTDl']-245.96823
 #    graph_data['Tr'] = 9.91684E-6*graph_data['RTDr']**2+0.23605*graph_data['RTDr']-245.96823
 #    graph_data['T_average'] = (graph_data.Tl+graph_data.Tr)/2
   
-    axs[0].plot(graph_data.TimeDur, graph_data.R_hotIn, label = 'Hot In')
+    axs[0].plot(graph_data.TimeDur, graph_data.RTDl, label = 'RTDl')
     axs[0].set_xlabel('time(s)')
     axs[0].set_ylabel('R(Ohms)')
     axs[0].legend(loc = 'upper right')
     
-    axs[1].plot(graph_data.TimeDur, graph_data.R_coldIn, label = 'Cold In')
+    axs[1].plot(graph_data.TimeDur, graph_data.RTDr, label = 'RTDr')
     axs[1].set_xlabel('time(s)')
     axs[1].set_ylabel('R(Ohms)')
     axs[1].legend(loc = 'upper right')
     
-    axs[2].plot(graph_data.TimeDur, graph_data.R_GaSn, label = 'GaSn')
+    axs[2].plot(graph_data.TimeDur, graph_data.Rsamp, label = 'Rsamp')
     axs[2].set_xlabel('time(s)')
     axs[2].set_ylabel('R(Ohms)')
     axs[2].legend(loc = 'upper right')
     
-    axs[3].plot(graph_data.TimeDur, graph_data.R_Cerrotru, label = 'Cerrotru')
-    axs[3].set_xlabel('time(s)')
-    axs[3].set_ylabel('R(Ohms)')
-    axs[3].legend(loc = 'upper right')
+#    axs[3].plot(graph_data.TimeDur, graph_data.R_Cerrotru, label = 'Cerrotru')
+#    axs[3].set_xlabel('time(s)')
+#    axs[3].set_ylabel('R(Ohms)')
+#    axs[3].legend(loc = 'upper right')
     plt.tight_layout()
   
     '''
@@ -100,7 +100,7 @@ def animate_multi_files(i, axs, fnames, x_columns, y_columns, colors=None):
 #fig = plt.figure()
 #ax = fig.add_subplot(1,1,1)
 #ani = animation.FuncAnimation(fig, animate, fargs=[ax, fname, x_column, y_column], interval=1000)
-fig, axs = plt.subplots(4,1, figsize=(10,8))
+fig, axs = plt.subplots(3,1, figsize=(10,8))
 ani = animation.FuncAnimation(fig, animate_multi, fargs=[axs, fname, colors], interval=interval)
 #animate_multi(1,axs,fname,colors)
 plt.show()

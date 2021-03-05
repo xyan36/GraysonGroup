@@ -15,18 +15,18 @@ import os
 
 rm = visa.ResourceManager()
 rm.list_resources()
-s1 = rm.open_resource('GPIB2::1::INSTR')
-s2 = rm.open_resource('GPIB2::15::INSTR')
+s1 = rm.open_resource('GPIB2::15::INSTR')
+s2 = rm.open_resource('GPIB2::1::INSTR')
 s3 = rm.open_resource('GPIB2::2::INSTR')
-s4 = rm.open_resource('GPIB2::16::INSTR')  
+#s4 = rm.open_resource('GPIB2::16::INSTR')  
 
-date = '210222'
+date = '210304'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = date + '//' + date + '_' +"Bi2Te3_n4_contact_test2.txt"
-header = "Date Time,R_hotIn,R_coldIn,R_GaSn,R_Cerrotru\n"
+FILENAME = date + '//' + date + '_' +"Bi2Te3_p5_contact_test4.txt"
+header = "Date_Time,RTDl,RTDr,Rsamp\n"
 with open(FILENAME, "w") as output:
     output.write(header)
 print(header)
@@ -37,12 +37,12 @@ try:
         ans1 = float( s1.query(":sens:data:fres?"))
         ans2 = float( s2.query(":sens:data:fres?"))
         ans3 = float(s3.query("sens:data:fres?"))
-        ans4 = float(s4.query("sens:data:fres?"))
+#        ans4 = float(s4.query("sens:data:fres?"))
         line = str(dt.datetime.now()) + "," \
                      + str(ans1) + ","  \
                      + str(ans2) +  ","  \
-                     + str(ans3)+  ","  \
-                     + str(ans4)
+                     + str(ans3) #+  ","  \
+#                     + str(ans4)
         with open(FILENAME, "a") as output:             
             output.write(line + "\n")
         print(line)
