@@ -24,7 +24,7 @@ interval = 1000
 #          'results/GaGdN-300K-190809_002.dat']
 #fname = '200203//200203_P_4_power_dep_f3p4_test2_2020-02-03 15-15-13.142605.txt'
 #fname = '200203//200203_P_4_power_dep_f3p4_test1_2020-02-03 14-48-22.718494.txt'
-fname = '200821//200821_Bi2Te3_n2_power_dep_f3p4_4.txt'
+fname = '210309//210309_Bi2Te3_p5_power_dep_f3p4_1.txt'
 #x_column = 'B_digital'
 #y_column = 'V_real_12'
 #x_columns = ['B_digital', 'B_digital']#, 'B_digital']
@@ -45,7 +45,7 @@ fname = '200821//200821_Bi2Te3_n2_power_dep_f3p4_4.txt'
 def animate_multi(i, axs, fname, color=None):
     for ax in axs:
         ax.clear()
-    graph_data = pd.read_csv(fname, sep = ' ', header = 0)
+    graph_data = pd.read_csv(fname, sep = ',', header = 0)
       
 #    axs[0].plot(graph_data.Time, graph_data.X1, label = 'X1')
 #    axs[0].plot(graph_data.Time, graph_data.Y1, label = 'Y1')
@@ -63,7 +63,7 @@ def animate_multi(i, axs, fname, color=None):
     axs[1].set_ylabel('V3w(V)')
     axs[1].legend(loc = 'upper right')
     #axs[2].legend(loc = 'lower left')
-    Rref = 1.57
+    Rref = 3.03
     graph_data['I1w'] = graph_data['X1_ref']/Rref
     axs[2].plot((graph_data['I1w'])**3, graph_data.X3, marker = 'o', label = 'X3')
     axs[2].set_xlabel('I1w^3(A^3)')

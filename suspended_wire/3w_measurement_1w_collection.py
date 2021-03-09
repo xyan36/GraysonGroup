@@ -49,37 +49,37 @@ def lockinsingle_set_pms(lockin, timeCon, sensitivity):
     
 ### measurements ###
 def measurement(f1,f2,sens,initWaitTime): #sens= allowed error in reading
-    X3 = float(lockin1.query("OUTP?1"))
-    Y3 = float(lockin1.query("OUTP?2"))
-    X3_ref = float(lockin2.query("OUTP?1"))
-    Y3_ref = float(lockin2.query("OUTP?2"))
-    time.sleep(initWaitTime) #initial wait time
-    X33 = float(lockin1.query("OUTP?1"))
-#    Y11 = float(lockin1.query("OUTP?2"))
-    X33_ref = float(lockin2.query("OUTP?1"))
-#    Y22 = float(lockin2.query("OUTP?2"))
-    #check reading to be stable
-    while (np.abs(X3 - X33)> sens
-        or np.abs(X3_ref - X33_ref)> sens):
-        X33 = float(lockin1.query("OUTP?1"))
-#        Y11 = float(lockin1.query("OUTP?2"))
-        X33_ref = float(lockin2.query("OUTP?1"))
-#        Y22 = float(lockin2.query("OUTP?2"))
-        time.sleep(5) #additional wait time
+    try:
         X3 = float(lockin1.query("OUTP?1"))
         Y3 = float(lockin1.query("OUTP?2"))
         X3_ref = float(lockin2.query("OUTP?1"))
-        Y3_ref = float(lockin2.query("OUTP?2"))     
-    t = float(time.time()-t0)
-    timeCon = int(lockin1.query('OFLT?'))
-    SENS = int(lockin1.query('SENS?'))
-    line = str(datetime.now()) +" " + str(t) + " " \
-    + str(timeCon) + " " + str(SENS) + " "  \
-    + str(f1) + " " + str(f2) + " "  \
-    + str(X3) + " " + str(Y3) + " "  \
-    + str(X3_ref) + " " + str(Y3_ref)
-    print(line)
-    try:
+        Y3_ref = float(lockin2.query("OUTP?2"))
+        time.sleep(initWaitTime) #initial wait time
+        X33 = float(lockin1.query("OUTP?1"))
+    #    Y11 = float(lockin1.query("OUTP?2"))
+        X33_ref = float(lockin2.query("OUTP?1"))
+    #    Y22 = float(lockin2.query("OUTP?2"))
+        #check reading to be stable
+        while (np.abs(X3 - X33)> sens
+            or np.abs(X3_ref - X33_ref)> sens):
+            X33 = float(lockin1.query("OUTP?1"))
+    #        Y11 = float(lockin1.query("OUTP?2"))
+            X33_ref = float(lockin2.query("OUTP?1"))
+    #        Y22 = float(lockin2.query("OUTP?2"))
+            time.sleep(5) #additional wait time
+            X3 = float(lockin1.query("OUTP?1"))
+            Y3 = float(lockin1.query("OUTP?2"))
+            X3_ref = float(lockin2.query("OUTP?1"))
+            Y3_ref = float(lockin2.query("OUTP?2"))     
+        t = float(time.time()-t0)
+        timeCon = int(lockin1.query('OFLT?'))
+        SENS = int(lockin1.query('SENS?'))
+        line = str(datetime.now()) +" " + str(t) + " " \
+        + str(timeCon) + " " + str(SENS) + " "  \
+        + str(f1) + " " + str(f2) + " "  \
+        + str(X3) + " " + str(Y3) + " "  \
+        + str(X3_ref) + " " + str(Y3_ref)
+        print(line)
 #        user = input('Record the readings? y/n: ')
 #        while (user == 'n'):
 #            print('Not recorded.')

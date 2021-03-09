@@ -110,17 +110,17 @@ def VoltageSweep(voltages,sens1, TC1, SENS1, initWaitTime1, sens3, TC3, SENS3, i
  ##############################################################################
 
 ### crate a folder with today's date and create a new file name ###
-date = '200811'
+date = '210309'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass
-FILENAME = f"{date}//{date}_Bi2Te3_p2_new_power_dep_f3p4.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_p5_new_power_dep_f3p4_1.txt"
 
 rm = visa.ResourceManager();
 print(rm.list_resources())
 lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample & SINE_OUT source
-lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
+lockin2 = rm.open_resource("GPIB2::8::INSTR") #reference resistor
 t0 = time.time()
 ti = datetime.now()
 header = "Date time Time V_input X1 Y1 X1_ref Y1_ref X3 Y3 X3_ref Y3_ref\n"
