@@ -24,8 +24,8 @@ interval = 1000
 #          'results/GaGdN-300K-190809_002.dat']
 #fname = '200203//200203_P_4_power_dep_f3p4_test2_2020-02-03 15-15-13.142605.txt'
 #fname = '200203//200203_P_4_power_dep_f3p4_test1_2020-02-03 14-48-22.718494.txt'
-date = '200822'
-fname = f'{date}//{date}_Bi2Te3_n2_3w.txt'
+date = '210310'
+fname = f'{date}//{date}_Bi2Te3_p5_3w_1.txt'
 #x_column = 'B_digital'
 #y_column = 'V_real_12'
 #x_columns = ['B_digital', 'B_digital']#, 'B_digital']
@@ -48,15 +48,15 @@ def animate_multi(i, axs, fname, color=None):
         ax.clear()
     graph_data = pd.read_csv(fname, sep = ' ', header = 0)
       
-    axs[0].plot(graph_data.Lockin1f, graph_data.X3, label = 'X3')
-    axs[0].plot(graph_data.Lockin2f, graph_data.X3_ref, label = 'X3_ref')
+    axs[0].plot(graph_data.Lockin1f, graph_data.X3, marker = 'o', label = 'X3')
+    axs[0].plot(graph_data.Lockin2f, graph_data.X3_ref, marker = 'o', label = 'X3_ref')
     axs[0].set_xlabel('f(Hz)')
     axs[0].set_ylabel('Real_V3w(V)')
     axs[0].set_xscale('log')
     axs[0].legend(loc = 'upper right')
     
-    axs[1].plot(graph_data.Lockin1f, graph_data.Y3, label = 'Y3')
-    axs[1].plot(graph_data.Lockin2f, graph_data.Y3_ref, label = 'Y3_ref')
+    axs[1].plot(graph_data.Lockin1f, graph_data.Y3, marker = 'o', label = 'Y3')
+    axs[1].plot(graph_data.Lockin2f, graph_data.Y3_ref, marker = 'o', label = 'Y3_ref')
     axs[1].set_xlabel('f(Hz)')
     axs[1].set_ylabel('Imag_V3w(V)')
     axs[1].set_xscale('log')

@@ -21,14 +21,14 @@ import os
 rm = visa.ResourceManager();
 print(rm.list_resources())
 lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample
-lockin2 = rm.open_resource("GPIB2::18::INSTR") #reference resistor
+lockin2 = rm.open_resource("GPIB2::8::INSTR") #reference resistor
 ### output file initialize ###
-date = '200822'
+date = '210310'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = f"{date}//{date}_Bi2Te3_n2_3w.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_p5_3w_1.txt"
 t0 = time.time()
 ti = datetime.now()
 header = "Date_time Time TC SENS Lockin1f Lockin2f X3 Y3 X3_ref Y3_ref\n"
@@ -122,25 +122,30 @@ def measurement(f1,f2,sens,initWaitTime): #sens= allowed error in reading
 ### frequency swap ### 
 #sweep 5 equally spaced frequency points in log scale from [start, start * 10)
 def freqSweep(start,sens,initWaitTime):
-    listOfFreq = np.zeros(5)
-    for i in np.arange(0,5,1):
-        listOfFreq[i] = start * 10**(0.2*i)
-    for i in listOfFreq:
-        lockin1.write('FREQ %f' %i)
-        if (start < 1):
-            error = 0.01
-            sleep = 20#waiting for freq sync
-        else:
-            error = 1
-            sleep = 5
-        freq1 = float(lockin1.query('freq?'))
-        freq2 = float(lockin2.query('freq?'))
-        while (np.abs(i - freq1) > error or np.abs(i - freq2) > error):
-            time.sleep(sleep)
+    try:
+        listOfFreq = np.zeros(5)
+        for i in np.arange(0,5,1):
+            listOfFreq[i] = start * 10**(0.2*i)
+        for i in listOfFreq:
+            lockin1.write('FREQ %f' %i)
+            if (start < 1):
+                error = 0.01
+                sleep = 20#waiting for freq sync
+            else:
+                error = 1
+                sleep = 5
             freq1 = float(lockin1.query('freq?'))
             freq2 = float(lockin2.query('freq?'))
-        #print(i,freq1,freq2)
-        measurement(freq1,freq2,sens,initWaitTime)
+            while (np.abs(i - freq1) > error or np.abs(i - freq2) > error):
+                time.sleep(sleep)
+                freq1 = float(lockin1.query('freq?'))
+                freq2 = float(lockin2.query('freq?'))
+            #print(i,freq1,freq2)
+            measurement(freq1,freq2,sens,initWaitTime)
+    except KeyboardInterrupt:
+        print('Keyboard Interrupt.')
+    finally:
+        return
 #single freq measurement for f > 1kHz      
 def freqSweepSingle(start, sens,initWaitTime):
         lockin1.write('FREQ %f' %start)
@@ -161,7 +166,7 @@ def freqSweepSingle(start, sens,initWaitTime):
 
 ##3w measurement
 lockinInit_3w()
-lockin1.write("SLVL 0.7")
+lockin1.write("SLVL 1.1")
 
 ###freq sweep 0.001-0.01Hz
 ##timeCon = 17#
@@ -173,7 +178,7 @@ lockin1.write("SLVL 0.7")
 #
 ##freq sweep 0.01-0.1Hz
 timeCon = 15#
-sensitivity = 14# 18 FOR 2V; 14#100 UV;
+sensitivity = 15# 18 FOR 2V; 14#100 UV;
 lockin_set_pms(timeCon,sensitivity)
 sens = 1e-7
 waitTime = 30*60#s

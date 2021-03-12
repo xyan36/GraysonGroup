@@ -66,6 +66,7 @@ def animate_multi(i, axs, fname, color=None):
     Rref = 3.03
     graph_data['I1w'] = graph_data['X1_ref']/Rref
     axs[2].plot((graph_data['I1w'])**3, graph_data.X3, marker = 'o', label = 'X3')
+    axs[2].plot((graph_data['I1w'])**3, graph_data.Y3, marker = 'o', label = 'Y3')
     axs[2].set_xlabel('I1w^3(A^3)')
     axs[2].set_ylabel('V3w(V)')
     axs[2].legend(loc = 'upper right')
