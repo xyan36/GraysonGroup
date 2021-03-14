@@ -20,15 +20,15 @@ import os
 ### basic parameters ###
 rm = visa.ResourceManager();
 print(rm.list_resources())
-lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample
-lockin2 = rm.open_resource("GPIB2::8::INSTR") #reference resistor
+lockin1 = rm.open_resource("GPIB2::8::INSTR") #sample
+lockin2 = rm.open_resource("GPIB2::9::INSTR") #reference resistor
 ### output file initialize ###
-date = '210310'
+date = '210312'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = f"{date}//{date}_Bi2Te3_p5_3w_1.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_p5_3w_2.txt"
 t0 = time.time()
 ti = datetime.now()
 header = "Date_time Time TC SENS Lockin1f Lockin2f X3 Y3 X3_ref Y3_ref\n"
@@ -129,7 +129,7 @@ def freqSweep(start,sens,initWaitTime):
         for i in listOfFreq:
             lockin1.write('FREQ %f' %i)
             if (start < 1):
-                error = 0.01
+                error = 0.001
                 sleep = 20#waiting for freq sync
             else:
                 error = 1
