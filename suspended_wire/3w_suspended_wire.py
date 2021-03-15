@@ -197,7 +197,7 @@ timeCon =  12#
 sensitivity = 14#2mV
 lockin_set_pms(timeCon,sensitivity)
 sens = 1e-7#0.1e-3V
-waitTime = 15*60#s
+waitTime = 20*60#s
 freqSweep(1,sens,waitTime)
 ##
 ##freq sweep 10-100Hz
