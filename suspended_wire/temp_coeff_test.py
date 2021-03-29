@@ -24,7 +24,7 @@ try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = date + '//' + date + '_' +"Bi2Te3_p5_temp_coeff_test.txt"
+FILENAME = date + '//' + date + '_' +"Bi2Te3_p5_temp_coeff_test_2.txt"
 header = "Date_Time,RTDl,RTDr,Rsamp\n"
 with open(FILENAME, "w") as output:
     output.write(header)
@@ -43,6 +43,7 @@ try:
         with open(FILENAME, "a") as output:             
             output.write(line + "\n")
         print(line)
+        time.sleep(0.5)
 except KeyboardInterrupt:  
     pass
 finally:
