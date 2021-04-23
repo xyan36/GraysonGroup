@@ -185,17 +185,17 @@ def voltage_sweep_manual(voltages, initWaitTime):
     ##############################################################################
 
 ### crate a folder with today's date and create a new file name ###
-date = '210309'
+date = '210423'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass
-FILENAME = f"{date}//{date}_Bi2Te3_p5_power_dep_f3p4_1.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_p8_power_dep_f3p4_2_more.txt"
 
 rm = visa.ResourceManager();
 print(rm.list_resources())
-lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample & SINE_OUT source
-lockin2 = rm.open_resource("GPIB2::8::INSTR") #reference resistor
+lockin1 = rm.open_resource("GPIB2::8::INSTR") #sample & SINE_OUT source
+lockin2 = rm.open_resource("GPIB2::9::INSTR") #reference resistor
 
 header = "Date_time,Time,V_input,TC,SENS_X3,SENS_X1,X3,Y3,X1_ref,Y1_ref\n"
 print(header)
@@ -205,10 +205,10 @@ with open(FILENAME,'w') as output:
 ### Set the parameters ###
 freq = 3.4 #Hz
 timeCon = 13 #
-voltages = np.array([0.1, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9])
+voltages = np.array([1.7, 1.9])
 sensitivity1 = 24# sensitivity for 1w measurement
 sensitivity3 = 15# sensitivity for 3w measurement
-initWaitTime = 5 * 60#s
+initWaitTime = 15 * 60#s
 lockin1.write('harm 3')
 lockin2.write('harm 1')
 ##########################

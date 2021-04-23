@@ -19,12 +19,12 @@ rtdl = rm.open_resource('GPIB2::15::INSTR') #20 22
 rtdr = rm.open_resource('GPIB2::1::INSTR')#16 17
 samp = rm.open_resource('GPIB2::2::INSTR')  
 
-date = '210315'
+date = '210423'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = date + '//' + date + '_' +"Bi2Te3_p5_temp_coeff_test_2.txt"
+FILENAME = date + '//' + date + '_' +"Bi2Te3_p8_temp_coeff_test_3.txt"
 header = "Date_Time,RTDl,RTDr,Rsamp\n"
 with open(FILENAME, "w") as output:
     output.write(header)

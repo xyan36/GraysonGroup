@@ -24,7 +24,7 @@ interval = 1000
 #          'results/GaGdN-300K-190809_002.dat']
 #fname = '200203//200203_P_4_power_dep_f3p4_test2_2020-02-03 15-15-13.142605.txt'
 #fname = '200203//200203_P_4_power_dep_f3p4_test1_2020-02-03 14-48-22.718494.txt'
-fname = '210309//210309_Bi2Te3_p5_power_dep_f3p4_1.txt'
+fname = '210423//210423_Bi2Te3_p8_power_dep_f3p4_2.txt'
 #x_column = 'B_digital'
 #y_column = 'V_real_12'
 #x_columns = ['B_digital', 'B_digital']#, 'B_digital']
@@ -63,7 +63,7 @@ def animate_multi(i, axs, fname, color=None):
     axs[1].set_ylabel('V3w(V)')
     axs[1].legend(loc = 'upper right')
     #axs[2].legend(loc = 'lower left')
-    Rref = 3.03
+    Rref = 2.99
     graph_data['I1w'] = graph_data['X1_ref']/Rref
     axs[2].plot((graph_data['I1w'])**3, graph_data.X3, marker = 'o', label = 'X3')
     axs[2].plot((graph_data['I1w'])**3, graph_data.Y3, marker = 'o', label = 'Y3')
