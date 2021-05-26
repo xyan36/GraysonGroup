@@ -132,6 +132,9 @@ def voltage_sweep_auto(voltages, initWaitTime):
         pass
     finally:
         lockin1.write("SLVL %f" %0.004)
+        lockin1.write('FREQ %f' %17)
+        lockin_set_pms(timeCon=9,sensitivity=22)
+        lockinInit_1w()
         tf = datetime.now()
         print ("Program done! total time is: "+ str(tf-ti))
 
@@ -184,12 +187,12 @@ def voltage_sweep_manual(voltages, initWaitTime):
     ##############################################################################
 
 ### crate a folder with today's date and create a new file name ###
-date = '210514'
+date = '210525'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass
-FILENAME = f"{date}//{date}_Bi2Te3_n5_power_dep_f3p4_2.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_n6_1mm_power_dep_f3p4_2.txt"
 
 rm = visa.ResourceManager();
 print(rm.list_resources())
@@ -204,7 +207,7 @@ with open(FILENAME,'w') as output:
 ### Set the parameters ###
 freq = 3.4 #Hz
 timeCon = 13 #
-voltages = np.array([0.7, 0.9, 1.1, 1.3, 1.5])
+voltages = np.array([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
 sensitivity1 = 24# sensitivity for 1w measurement
 sensitivity3 = 15# sensitivity for 3w measurement
 initWaitTime = 15 * 60#s
