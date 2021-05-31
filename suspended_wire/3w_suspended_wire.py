@@ -20,15 +20,15 @@ import os
 ### basic parameters ###
 rm = visa.ResourceManager();
 print(rm.list_resources())
-lockin1 = rm.open_resource("GPIB2::8::INSTR") #sample
-lockin2 = rm.open_resource("GPIB2::9::INSTR") #reference resistor
+lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample
+lockin2 = rm.open_resource("GPIB2::8::INSTR") #reference resistor
 ### output file initialize ###
-date = '210312'
+date = '210527'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = f"{date}//{date}_Bi2Te3_p5_3w_2.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_n6_1mm_3w_1.txt"
 t0 = time.time()
 ti = datetime.now()
 header = "Date_time Time TC SENS Lockin1f Lockin2f X3 Y3 X3_ref Y3_ref\n"
@@ -166,7 +166,7 @@ def freqSweepSingle(start, sens,initWaitTime):
 
 ##3w measurement
 lockinInit_3w()
-lockin1.write("SLVL 1.1")
+lockin1.write("SLVL 0.7")
 
 ###freq sweep 0.001-0.01Hz
 ##timeCon = 17#
@@ -178,33 +178,33 @@ lockin1.write("SLVL 1.1")
 #
 ##freq sweep 0.01-0.1Hz
 timeCon = 15#
-sensitivity = 15# 18 FOR 2V; 14#100 UV;
+sensitivity = 22# 18 FOR 2V; 14#100 UV;
 lockin_set_pms(timeCon,sensitivity)
-sens = 1e-7
-waitTime = 30*60#s
+sens = 1e-5
+waitTime = 40*60#s
 freqSweep(0.01,sens,waitTime)
 #
 ###freq sweep 0.1-1Hz
-timeCon = 13#
-sensitivity = 14# 18 FOR 2V; 14#100 UV;
+timeCon = 14#
+sensitivity = 21# 18 FOR 2V; 14#100 UV;
 lockin_set_pms(timeCon,sensitivity)
-sens = 1e-7
+sens = 1e-5
 waitTime = 20*60#s
 freqSweep(0.1,sens,waitTime)
 #
 ###freq sweep 1-10Hz
-timeCon =  12#
-sensitivity = 14#2mV
+timeCon =  13#
+sensitivity = 20#
 lockin_set_pms(timeCon,sensitivity)
-sens = 1e-7#0.1e-3V
+sens = 1e-5#0.1e-3V
 waitTime = 20*60#s
 freqSweep(1,sens,waitTime)
 ##
 ##freq sweep 10-100Hz
 timeCon = 11#
-sensitivity = 14#500uV
+sensitivity = 20#500uV
 lockin_set_pms(timeCon,sensitivity)
-sens = 1e-7#0.01e-3#V
+sens = 1e-5#0.01e-3#V
 waitTime = 10*60#s
 freqSweep(10,sens,waitTime)
 
