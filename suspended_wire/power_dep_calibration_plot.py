@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
-graph_data = pd.read_csv('210525//210525_Bi2Te3_n6_1mm_power_dep_f3p4_2.txt', sep = ',')
+graph_data = pd.read_csv('210601//210601_Bi2Te3_n6_2mm_power_dep_f3p4_2.txt', sep = ',')
 print(graph_data.head())
 #graph_data.loc['2020-02-04','Time'] += 2051
 fig, axs = plt.subplots(3,1, figsize = (8,10))
@@ -32,7 +32,7 @@ fig, axs = plt.subplots(3,1, figsize = (8,10))
 #axs[1].legend(loc = 'upper left')
 #axs[2].legend(loc = 'lower left')
 
-Rref = 10.029
+Rref = 3.0#10.029
 graph_data['I1w'] = graph_data['X1_ref']/Rref
 X = (graph_data['I1w'].values.reshape(-1,1))**3
 Y = graph_data.X3.values.reshape(-1,1)
