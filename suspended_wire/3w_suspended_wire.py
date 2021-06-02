@@ -23,12 +23,12 @@ print(rm.list_resources())
 lockin1 = rm.open_resource("GPIB2::9::INSTR") #sample
 lockin2 = rm.open_resource("GPIB2::8::INSTR") #reference resistor
 ### output file initialize ###
-date = '210527'
+date = '210601'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = f"{date}//{date}_Bi2Te3_n6_1mm_3w_1.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_n6_2mm_3w_1.txt"
 t0 = time.time()
 ti = datetime.now()
 header = "Date_time Time TC SENS Lockin1f Lockin2f X3 Y3 X3_ref Y3_ref\n"
