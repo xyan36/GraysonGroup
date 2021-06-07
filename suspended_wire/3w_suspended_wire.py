@@ -163,6 +163,31 @@ def freqSweepSingle(start, sens,initWaitTime):
             freq2 = float(lockin2.query('freq?'))
         #print(i,freq1,freq2)
         measurement(freq1,freq2,sens,initWaitTime)
+        
+def outputs_query():
+    v = lockin1.query('slvl?').rstrip()
+    tc = lockin1.query('oflt?').rstrip()
+    s1_x3 = lockin1.query('sens?').rstrip()
+    s2_x3 = lockin2.query('sens?').rstrip()
+    X3 = lockin1.query('outp?1').rstrip()
+    Y3 = lockin1.query('outp?2').rstrip()
+    X3_ref = lockin2.query('outp?1').rstrip()
+    Y3_ref = lockin2.query('outp?2').rstrip()
+    header = "V_input TC SENS_X3 SENS_X1 X3 Y3 X3_ref Y3_ref"
+    print(header)
+    print(v, tc, s1_x3, s2_x3, X3, Y3, X3_ref, Y3_ref, sep = " ")
+    
+def settings_query():
+    f1 = lockin1.query('freq?').rstrip()
+    f2 = lockin2.query('freq?').rstrip()
+    tc1 = lockin1.query('oflt?').rstrip()
+    tc2 = lockin2.query('oflt?').rstrip()
+    sstvt1 = lockin1.query('sens?').rstrip()
+    sstvt2 = lockin2.query('sens?').rstrip()
+    header = "LOCKIN# FREQ TC SENS"
+    print(header)
+    print('lockin1', f1, tc1, sstvt1, sep = "\t")
+    print('lockin2', f2, tc2, sstvt2, sep = "\t")
 
 ##3w measurement
 lockinInit_3w()
