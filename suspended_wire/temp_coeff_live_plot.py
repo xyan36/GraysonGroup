@@ -22,8 +22,8 @@ interval = 1000
 
 #fnames = ['results/GaGdN-300K-190809_001.dat',
 #          'results/GaGdN-300K-190809_002.dat']
-date = '210423'
-fname =  date + '//' + date + '_' +"Bi2Te3_p8_temp_coeff_test_3.txt"
+date = '210622'
+fname =  date + '//' + date + '_' +"Bi2Te3_p11_temp_coeff_test_1.txt"
 #Rref = 12.64
 
 #x_column = 'B_digital'

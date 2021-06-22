@@ -15,16 +15,16 @@ import os
 
 rm = visa.ResourceManager()
 rm.list_resources()
-rtdl = rm.open_resource('GPIB2::15::INSTR') #20 22
-rtdr = rm.open_resource('GPIB2::1::INSTR')#16 17
+rtdl = rm.open_resource('GPIB2::15::INSTR') #21 23
+rtdr = rm.open_resource('GPIB2::1::INSTR')#14 15
 samp = rm.open_resource('GPIB2::2::INSTR')  
 
-date = '210423'
+date = '210622'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = date + '//' + date + '_' +"Bi2Te3_p8_temp_coeff_test_3.txt"
+FILENAME = date + '//' + date + '_' +"Bi2Te3_p11_temp_coeff_test_1.txt"
 header = "Date_Time,RTDl,RTDr,Rsamp\n"
 with open(FILENAME, "w") as output:
     output.write(header)
@@ -43,7 +43,7 @@ try:
         with open(FILENAME, "a") as output:             
             output.write(line + "\n")
         print(line)
-        time.sleep(0.5)
+        time.sleep(0.1)
 except KeyboardInterrupt:  
     pass
 finally:
