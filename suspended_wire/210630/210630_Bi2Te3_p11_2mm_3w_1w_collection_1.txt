@@ -1,0 +1,5 @@
+1w input voltage: 0.900000 V
+Date_time Time TC SENS Lockin1f Lockin2f X1 Y1 X1_ref Y1_ref
+1w input voltage: 0.900000 V
+Date_time Time TC SENS Lockin1f Lockin2f X1 Y1 X1_ref Y1_ref
+2021-06-30 12:47:33.336887 566.8294208049774 9 24 17.0 17.0002 0.130601 -0.000106812 0.105095 0.000228883
