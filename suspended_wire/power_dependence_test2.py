@@ -187,12 +187,12 @@ def voltage_sweep_manual(voltages, initWaitTime):
     ##############################################################################
 
 ### crate a folder with today's date and create a new file name ###
-date = '210625'
+date = '210714'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass
-FILENAME = f"{date}//{date}_Bi2Te3_p11_2mm_power_dep_f3p4_1.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_n10_power_dep_f3p4_1.txt"
 
 rm = visa.ResourceManager();
 print(rm.list_resources())
