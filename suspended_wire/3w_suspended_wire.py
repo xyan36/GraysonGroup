@@ -23,12 +23,12 @@ print(rm.list_resources())
 lockin1 = rm.open_resource("GPIB2::8::INSTR") #sample
 lockin2 = rm.open_resource("GPIB2::9::INSTR") #reference resistor
 ### output file initialize ###
-date = '210630'
+date = '210716'
 try:
     os.mkdir(date)
 except FileExistsError:
     pass    
-FILENAME = f"{date}//{date}_Bi2Te3_p11_2mm_3w_1.txt"
+FILENAME = f"{date}//{date}_Bi2Te3_p11_2mm_3w_2.txt"
 t0 = time.time()
 ti = datetime.now()
 header = "Date_time Time TC SENS Lockin1f Lockin2f X3 Y3 X3_ref Y3_ref\n"
@@ -120,12 +120,12 @@ def measurement(f1,f2,sens,initWaitTime): #sens= allowed error in reading
         output.write(line + '\n')
 
 ### frequency swap ### 
-#sweep 5 equally spaced frequency points in log scale from [start, start * 10)
-def freqSweep(start,sens,initWaitTime):
+#sweep n(=num_pts) equally spaced frequency points in log scale from [start, start * 10)
+def freqSweep(start,num_pts,sens,initWaitTime):
     try:
-        listOfFreq = np.zeros(5)
-        for i in np.arange(0,5,1):
-            listOfFreq[i] = start * 10**(0.2*i)
+        listOfFreq = np.zeros(num_pts)
+        for i in np.arange(0,num_pts,1):
+            listOfFreq[i] = start * 10**(1 / num_pts * i)
         for i in listOfFreq:
             lockin1.write('FREQ %f' %i)
             if (start < 1):
@@ -191,7 +191,7 @@ def settings_query():
 
 ##3w measurement
 lockinInit_3w()
-lockin1.write("SLVL 0.9")
+lockin1.write("SLVL 0.6")
 
 ###freq sweep 0.001-0.01Hz
 ##timeCon = 17#
@@ -207,7 +207,7 @@ sensitivity = 21# 18 FOR 2V; 14#100 UV;
 lockin_set_pms(timeCon,sensitivity)
 sens = 1e-6
 waitTime = 30*60#s
-freqSweep(0.01,sens,waitTime)
+freqSweep(0.01,5, sens,waitTime)
 #
 ###freq sweep 0.1-1Hz
 timeCon = 14#
@@ -215,7 +215,7 @@ sensitivity = 21# 18 FOR 2V; 14#100 UV;
 lockin_set_pms(timeCon,sensitivity)
 sens = 1e-6
 waitTime = 20*60#s
-freqSweep(0.1,sens,waitTime)
+freqSweep(0.1,10, sens,waitTime)
 #
 ###freq sweep 1-10Hz
 timeCon =  13#
@@ -223,7 +223,7 @@ sensitivity = 21#
 lockin_set_pms(timeCon,sensitivity)
 sens = 1e-6#0.1e-3V
 waitTime = 20*60#s
-freqSweep(1,sens,waitTime)
+freqSweep(1,10, sens,waitTime)
 ##
 ##freq sweep 10-100Hz
 timeCon = 11#
@@ -231,7 +231,7 @@ sensitivity = 21#500uV
 lockin_set_pms(timeCon,sensitivity)
 sens = 1e-6#0.01e-3#V
 waitTime = 10*60#s
-freqSweep(10,sens,waitTime)
+freqSweep(10,5, sens,waitTime)
 
 #freq sweep 100-1000Hz
 #timeCon = 11#
